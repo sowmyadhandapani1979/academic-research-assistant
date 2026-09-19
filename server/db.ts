@@ -1,4 +1,4 @@
-import Database from "better-sqlite3";
+import { DatabaseSync } from "node:sqlite";
 import { randomUUID } from "node:crypto";
 import {
   DEFAULT_RECENTS,
@@ -89,6 +89,8 @@ type PaperRow = {
   fetched_at: number;
 };
 
+export type AppDb = DatabaseSync;
+
 export function rowToPaper(row: PaperRow): Paper {
   let sections: Paper["sections"] = [];
   let related: Paper["related"] = [];
@@ -129,14 +131,14 @@ export function rowToPaper(row: PaperRow): Paper {
   });
 }
 
-export function upsertPaper(db: Database.Database, paper: Paper) {
+export function upsertPaper(db: AppDb, paper: Paper) {
   db.prepare(
     `INSERT INTO papers (
       id, title, authors_short, authors_full, year, abstract, url, source, tldr,
       sections_json, related_json, summary, takeaways, tags_palette_json, read_time, fetched_at
     ) VALUES (
-      @id, @title, @authors_short, @authors_full, @year, @abstract, @url, @source, @tldr,
-      @sections_json, @related_json, @summary, @takeaways, @tags_palette_json, @read_time, @fetched_at
+      ?, ?, ?, ?, ?, ?, ?, ?, ?,
+      ?, ?, ?, ?, ?, ?, ?
     )
     ON CONFLICT(id) DO UPDATE SET
       title=excluded.title,
@@ -153,29 +155,31 @@ export function upsertPaper(db: Database.Database, paper: Paper) {
       tags_palette_json=excluded.tags_palette_json,
       read_time=excluded.read_time,
       fetched_at=excluded.fetched_at`,
-  ).run({
-    id: paper.id,
-    title: paper.title,
-    authors_short: paper.authorsShort,
-    authors_full: paper.authorsFull,
-    year: paper.year,
-    abstract: paper.abstract,
-    url: paper.url ?? null,
-    source: paper.source ?? "Semantic Scholar",
-    tldr: paper.takeaways,
-    sections_json: JSON.stringify(paper.sections),
-    related_json: JSON.stringify(paper.related),
-    summary: paper.summary,
-    takeaways: paper.takeaways,
-    tags_palette_json: paper.tagsPalette ? JSON.stringify(paper.tagsPalette) : null,
-    read_time: paper.readTime,
-    fetched_at: Date.now(),
-  });
+  ).run(
+    paper.id,
+    paper.title,
+    paper.authorsShort,
+    paper.authorsFull,
+    paper.year,
+    paper.abstract,
+    paper.url ?? null,
+    paper.source ?? "Semantic Scholar",
+    paper.takeaways,
+    JSON.stringify(paper.sections),
+    JSON.stringify(paper.related),
+    paper.summary,
+    paper.takeaways,
+    paper.tagsPalette ? JSON.stringify(paper.tagsPalette) : null,
+    paper.readTime,
+    Date.now(),
+  );
 }
 
-function seedIfEmpty(db: Database.Database) {
-  const count = db.prepare("SELECT COUNT(*) AS n FROM papers").get() as { n: number };
-  if (count.n > 0) return;
+function seedIfEmpty(db: AppDb) {
+  const count = db.prepare("SELECT COUNT(*) AS n FROM papers").get() as
+    | { n: number | bigint }
+    | undefined;
+  if (Number(count?.n ?? 0) > 0) return;
   const now = Date.now();
   for (const paper of seedPapers) upsertPaper(db, paper);
   for (const q of DEFAULT_RECENTS) {
@@ -230,16 +234,16 @@ function seedIfEmpty(db: Database.Database) {
   }
 }
 
-export function createDb(path: string) {
-  const db = new Database(path);
-  db.pragma("journal_mode = WAL");
+export function createDb(path: string, opts?: { wal?: boolean }) {
+  const db = new DatabaseSync(path);
+  db.exec(`PRAGMA journal_mode = ${opts?.wal === false ? "DELETE" : "WAL"}`);
   db.exec(SCHEMA);
   migrateMarked(db);
   seedIfEmpty(db);
   return db;
 }
 
-function migrateMarked(db: Database.Database) {
+function migrateMarked(db: AppDb) {
   const cols = db.prepare("PRAGMA table_info(marked_papers)").all() as { name: string }[];
   if (!cols.some((c) => c.name === "reading_status")) {
     db.exec("ALTER TABLE marked_papers ADD COLUMN reading_status TEXT");
@@ -254,7 +258,7 @@ function migrateMarked(db: Database.Database) {
   `);
 }
 
-export function getPaper(db: Database.Database, id: string): Paper | undefined {
+export function getPaper(db: AppDb, id: string): Paper | undefined {
   const row = db.prepare("SELECT * FROM papers WHERE id = ?").get(id) as
     | PaperRow
     | undefined;
@@ -262,7 +266,7 @@ export function getPaper(db: Database.Database, id: string): Paper | undefined {
 }
 
 export function searchLocal(
-  db: Database.Database,
+  db: AppDb,
   query: string,
   opts?: { discipline?: string; period?: string; from?: string; to?: string },
 ): Paper[] {
@@ -285,7 +289,7 @@ export function searchLocal(
 }
 
 export function getCachedSearch(
-  db: Database.Database,
+  db: AppDb,
   query: string,
 ): { papers: Paper[]; total: number } | null {
   const key = query.trim().toLowerCase();
@@ -303,7 +307,7 @@ export function getCachedSearch(
 }
 
 export function setCachedSearch(
-  db: Database.Database,
+  db: AppDb,
   query: string,
   papers: Paper[],
   total: number,
@@ -320,7 +324,7 @@ export function setCachedSearch(
   ).run(key, JSON.stringify(papers.map((p) => p.id)), total, Date.now());
 }
 
-export function listHistory(db: Database.Database): string[] {
+export function listHistory(db: AppDb): string[] {
   const rows = db
     .prepare(
       "SELECT query FROM search_history ORDER BY created_at DESC LIMIT 8",
@@ -329,7 +333,7 @@ export function listHistory(db: Database.Database): string[] {
   return rows.map((r) => r.query);
 }
 
-export function rememberQuery(db: Database.Database, query: string) {
+export function rememberQuery(db: AppDb, query: string) {
   const trimmed = query.trim();
   if (!trimmed) return;
   db.prepare(
@@ -360,7 +364,7 @@ function entryFromRow(row: {
   };
 }
 
-export function listNotes(db: Database.Database, paperId: string): Note[] {
+export function listNotes(db: AppDb, paperId: string): Note[] {
   const rows = db
     .prepare(
       "SELECT * FROM notes WHERE paper_id = ? ORDER BY created_at DESC",
@@ -388,7 +392,7 @@ export function listNotes(db: Database.Database, paperId: string): Note[] {
 }
 
 export function listMarked(
-  db: Database.Database,
+  db: AppDb,
   opts: { tags?: string; search?: string; readStatus?: string },
 ) {
   const rows = db
@@ -434,7 +438,7 @@ export function listMarked(
 }
 
 export function upsertMarked(
-  db: Database.Database,
+  db: AppDb,
   paperId: string,
   patch: {
     tags?: string[];
@@ -534,7 +538,7 @@ export function upsertMarked(
   };
 }
 
-export function addTag(db: Database.Database, paperId: string, tag: string) {
+export function addTag(db: AppDb, paperId: string, tag: string) {
   const clean = tag.trim().toLowerCase().replace(/\s+/g, "-");
   if (!clean) return upsertMarked(db, paperId, {});
   const existing = db
@@ -549,7 +553,7 @@ export function addTag(db: Database.Database, paperId: string, tag: string) {
 }
 
 export function addNoteRow(
-  db: Database.Database,
+  db: AppDb,
   paperId: string,
   content: string,
   extra?: {
@@ -588,7 +592,7 @@ export function addNoteRow(
 }
 
 export function updateNoteRow(
-  db: Database.Database,
+  db: AppDb,
   paperId: string,
   noteId: string,
   content: string,
@@ -624,23 +628,23 @@ export function updateNoteRow(
 }
 
 export function deleteNoteRow(
-  db: Database.Database,
+  db: AppDb,
   paperId: string,
   noteId: string,
 ): boolean {
   const info = db
     .prepare("DELETE FROM notes WHERE id = ? AND paper_id = ?")
     .run(noteId, paperId);
-  return info.changes > 0;
+  return Number(info.changes) > 0;
 }
 
-export function removeMarked(db: Database.Database, paperId: string) {
+export function removeMarked(db: AppDb, paperId: string) {
   db.prepare("DELETE FROM notes WHERE paper_id = ?").run(paperId);
   db.prepare("DELETE FROM marked_papers WHERE paper_id = ?").run(paperId);
 }
 
 export function consolidate(
-  db: Database.Database,
+  db: AppDb,
   by: string,
   filter: string,
 ): string {

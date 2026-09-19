@@ -74,7 +74,6 @@ export async function searchOpenAlex(
   url.searchParams.set("per-page", String(Math.min(limit, 25)));
   const yearFilters: string[] = [];
   const year = filters?.year ?? "";
-  const m = year.match(/^(\d+)-(\d+)$/) || year.match(/^(\d+)-$/) || year.match(/^-(\d+)$/);
   if (/^\d+-\d+$/.test(year)) {
     const [from, to] = year.split("-");
     yearFilters.push(`from_publication_year:${from}`, `to_publication_year:${to}`);

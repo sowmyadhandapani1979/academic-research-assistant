@@ -1,5 +1,5 @@
 import express from "express";
-import type Database from "better-sqlite3";
+import type { AppDb } from "./db.ts";
 import {
   addNoteRow,
   addTag,
@@ -46,7 +46,7 @@ function searchPayload(papers: Paper[], extra: { warning?: string } = {}) {
 }
 
 async function recoverLimitedSearch(
-  db: Database.Database,
+  db: AppDb,
   query: string,
   limit: number,
   local: Paper[],
@@ -71,7 +71,7 @@ async function recoverLimitedSearch(
   return searchPayload(local, { warning: RATE_LIMIT_WARNING });
 }
 
-export function createApp(db: Database.Database, s2: S2Client) {
+export function createApp(db: AppDb, s2: S2Client) {
   const app = express();
   app.use(express.json());
 

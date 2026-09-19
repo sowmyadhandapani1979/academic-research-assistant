@@ -1,8 +1,6 @@
-import { existsSync, mkdirSync, readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { createApp } from "./app.ts";
-import { createDb } from "./db.ts";
-import { createS2, s2ResetQuiet } from "./s2.ts";
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { bootstrapApp } from "./bootstrap.ts";
 
 function loadDotEnv(file: string) {
   const path = resolve(file);
@@ -28,14 +26,7 @@ loadDotEnv(".env");
 loadDotEnv(".env.local");
 
 const port = Number(process.env.API_PORT ?? 3001);
-const sqlitePath = resolve(
-  process.env.SQLITE_PATH ?? "server/data/app.db",
-);
-mkdirSync(dirname(sqlitePath), { recursive: true });
-
-const db = createDb(sqlitePath);
-s2ResetQuiet();
-const app = createApp(db, createS2());
+const app = bootstrapApp();
 
 app.listen(port, () => {
   console.log(`API listening on http://localhost:${port}`);
