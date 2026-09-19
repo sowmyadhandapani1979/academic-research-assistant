@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Reading Paper - Mobile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;background:linear-gradient(135deg,#f5f7fa 0%,#e8eef5 100%)}
+a{color:#2563eb}a:hover{color:#1e40af}
+[title]{position:relative}
+[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:11px;line-height:1.2;padding:4px 8px;border-radius:6px;white-space:nowrap;z-index:5;pointer-events:none}
+</style>
+</helmet>
+<div style="width:375px;height:812px;display:flex;flex-direction:column;background:linear-gradient(135deg,#f5f7fa 0%,#e8eef5 100%)">
+<div style="padding:12px 16px;background:white;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center">
+<a href="MarkedPapersMobile.dc.html" title="Back" style="width:44px;height:44px;background:#f2f2f7;border:none;border-radius:12px;font-size:18px;cursor:pointer;text-decoration:none;color:#007AFF;display:flex;align-items:center;justify-content:center">←</a>
+<button style="width:40px;height:40px;background:none;border:none;font-size:20px;cursor:pointer">☰</button>
+</div>
+<div style="padding:12px 16px;border-bottom:1px solid #e5e7eb;display:flex;gap:8px;flex-wrap:wrap">
+<a href="NoteSummaryMobile.dc.html" title="Summary" style="width:44px;height:44px;background:#f2f2f7;color:#9933FF;border:none;border-radius:10px;font-size:16px;text-decoration:none;cursor:pointer;display:flex;align-items:center;justify-content:center">📋</a>
+<button title="Listen" style="width:44px;height:44px;background:#f2f2f7;color:#007AFF;border:none;border-radius:10px;font-size:16px;cursor:pointer">🎧</button>
+<button title="Mark as Read" style="width:44px;height:44px;background:#34C759;color:white;border:none;border-radius:10px;font-size:16px;cursor:pointer">✓</button>
+</div>
+<div style="flex:1;overflow-y:auto;padding:16px">
+<div style="margin-bottom:24px">
+<h2 style="margin:0 0 8px 0;font-size:20px;font-weight:700;color:#141413">Attention Is All You Need</h2>
+<p style="margin:0 0 16px 0;font-size:12px;color:#666">Vaswani, A., Shazeer, N., Parmar, N., et al. (2017)</p>
+<h3 style="margin:16px 0 8px 0;font-size:14px;font-weight:600;color:#141413">Abstract</h3>
+<p style="margin:0 0 16px 0;font-size:13px;color:#555;line-height:1.6">The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely.</p>
+<h3 style="margin:16px 0 8px 0;font-size:14px;font-weight:600;color:#141413">1. Introduction</h3>
+<p style="margin:0 0 12px 0;font-size:13px;color:#555;line-height:1.6">Recurrent neural networks, long short-term memory and gated recurrent neural networks in particular, have been firmly established as state of the art approaches in sequence modeling and transduction problems such as language modeling and machine translation.</p>
+<p style="margin:0 0 16px 0;font-size:13px;color:#555;line-height:1.6">However, fundamental constraints in how recurrent models are built, which process inputs sequentially, make parallelization difficult...</p>
+</div>
+<div style="border-top:1px solid #e5e7eb;padding-top:16px">
+<h3 style="margin:0 0 12px 0;font-size:14px;font-weight:600;color:#141413">Notes</h3>
+<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+<div style="padding:12px;background:white;border:1px solid #e5e7eb;border-radius:6px">
+<p style="margin:0;font-size:12px;color:#333;line-height:1.4">Core concept: Self-attention allows models to focus on relevant parts of input simultaneously</p>
+<p style="margin:8px 0 0 0;font-size:11px;color:#999">Added 2 min ago</p>
+<div style="display:flex;gap:6px;margin-top:8px">
+<button title="Edit" style="width:36px;height:36px;background:#f2f2f7;border:none;border-radius:8px;cursor:pointer">✎</button>
+<button title="Delete" style="width:36px;height:36px;background:#f2f2f7;border:none;border-radius:8px;cursor:pointer;color:#FF3B30">🗑</button>
+</div>
+</div>
+<div style="padding:12px;background:white;border:1px solid #e5e7eb;border-radius:6px">
+<p style="margin:0;font-size:12px;color:#333;line-height:1.4">Key advantage: Parallel processing unlike RNNs - enables faster training</p>
+<p style="margin:8px 0 0 0;font-size:11px;color:#999">Added 1 min ago</p>
+<div style="display:flex;gap:6px;margin-top:8px">
+<button title="Edit" style="width:36px;height:36px;background:#f2f2f7;border:none;border-radius:8px;cursor:pointer">✎</button>
+<button title="Delete" style="width:36px;height:36px;background:#f2f2f7;border:none;border-radius:8px;cursor:pointer;color:#FF3B30">🗑</button>
+</div>
+</div>
+</div>
+<textarea placeholder="Add a note..." style="width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-family:inherit;font-size:12px;resize:none;box-sizing:border-box;height:70px"></textarea>
+<button title="Add note" style="width:44px;height:44px;margin-top:8px;background:#2563eb;color:white;border:none;border-radius:12px;font-size:18px;cursor:pointer">➕</button>
+</div>
+</div>
+</div>
+<nav style="padding:12px 0;border-top:1px solid #e5e7eb;background:white;display:flex;justify-content:space-around">
+<a href="SearchMobile.dc.html" style="flex:1;text-align:center;padding:8px;text-decoration:none;color:#666;font-size:12px">🔍 Search</a>
+<a href="MarkedPapersMobile.dc.html" style="flex:1;text-align:center;padding:8px;text-decoration:none;color:#007AFF;font-size:12px;font-weight:600;border-top:3px solid #007AFF;margin-top:-12px">📌 Papers</a>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":375,"height":812}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

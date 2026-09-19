@@ -1,0 +1,47 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-09-18T00:00:00Z" },
+  "title": "Academic Research Assistant - UX Design",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Search.dc.html": { "x": 0, "y": 0, "w": 1280, "h": 840 },
+    "Results.dc.html": { "x": 1380, "y": 0, "w": 1280, "h": 840 },
+    "Search-Enhanced.dc.html": { "x": 0, "y": 5000, "w": 1280, "h": 840 },
+    "MarkedPapers.dc.html": { "x": 0, "y": 1000, "w": 1280, "h": 840 },
+    "ReadingVisual.dc.html": { "x": 1380, "y": 1000, "w": 1280, "h": 840 },
+    "NoteSummary.dc.html": { "x": 2760, "y": 1000, "w": 1280, "h": 840 },
+    "SearchMobile.dc.html": { "x": 4150, "y": 0, "w": 375, "h": 812 },
+    "ResultsMobile.dc.html": { "x": 4150, "y": 900, "w": 375, "h": 812 },
+    "MarkedPapersMobile.dc.html": { "x": 4150, "y": 1800, "w": 375, "h": 812 },
+    "ReadingVisualMobile.dc.html": { "x": 4150, "y": 2700, "w": 375, "h": 812 },
+    "NoteSummaryMobile.dc.html": { "x": 4150, "y": 3600, "w": 375, "h": 812 }
+  },
+  "order": [
+    "Search.dc.html",
+    "Search-Enhanced.dc.html",
+    "Results.dc.html",
+    "MarkedPapers.dc.html",
+    "ReadingVisual.dc.html",
+    "NoteSummary.dc.html",
+    "SearchMobile.dc.html",
+    "ResultsMobile.dc.html",
+    "MarkedPapersMobile.dc.html",
+    "ReadingVisualMobile.dc.html",
+    "NoteSummaryMobile.dc.html"
+  ],
+  "notes": {
+    "Search.dc.html": "Icon Search control with hover label; Discipline and Publication period filters; shared canvas background. Tabs keep titles.",
+    "Search-Enhanced.dc.html": "Three input field style options: Filled (shadow), Underline (minimalist), Outline (classic). Focus states with transitions.",
+    "Results.dc.html": "Accordion results (+/−). Abstract only when expanded. Pin to save. Open opens reader. Refine keeps filters.",
+    "MarkedPapers.dc.html": "Statuses In Progress, Yet to Start, Read. Default sort that order. Icon-only Open, Listen, Summary, Remove.",
+    "ReadingVisual.dc.html": "Icon chrome with hover labels. Notes have Edit/Delete. Add note is an icon. Shared canvas background.",
+    "NoteSummary.dc.html": "Icon Copy/Export/Regenerate. Notes have Edit/Delete. Status uses reading progress.",
+    "SearchMobile.dc.html": "Same filters and icon Search as desktop, 375 layout.",
+    "ResultsMobile.dc.html": "Accordion + pin + Open; discipline and period in refine bar.",
+    "MarkedPapersMobile.dc.html": "Reading statuses and icon row actions.",
+    "ReadingVisualMobile.dc.html": "Icon chrome; Edit/Delete notes.",
+    "NoteSummaryMobile.dc.html": "Icon quick actions; Edit/Delete notes."
+  },
+  "designSystems": []
+}

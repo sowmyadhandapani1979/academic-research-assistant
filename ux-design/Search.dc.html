@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Search Papers</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;background:linear-gradient(135deg,#f5f7fa 0%,#e8eef5 100%)}
+a{color:#2563eb}a:hover{color:#1e40af}
+[title]{position:relative}
+[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:11px;line-height:1.2;padding:4px 8px;border-radius:6px;white-space:nowrap;z-index:5;pointer-events:none}
+.input-filled{padding:16px 18px;border:none;border-radius:12px;font-size:16px;font-family:inherit;background:#ffffff;box-shadow:0 1px 3px rgba(0,0,0,0.08);transition:all 0.3s;color:#212121}
+.input-filled:focus{outline:none;box-shadow:0 2px 8px rgba(37,99,235,0.15);background:white}
+.chip{padding:8px 14px;border:1px solid #ddd;border-radius:20px;background:white;font-size:14px;color:#333;cursor:pointer;transition:all 0.2s}
+.chip:hover{border-color:#2563eb;background:#f0f7ff}
+.chip.active{background:#2563eb;color:white;border-color:#2563eb}
+.slider-container{display:flex;flex-direction:column;gap:12px}
+.dual-slider{position:relative;height:40px;display:flex;align-items:center}
+.dual-slider-track{position:absolute;width:100%;height:4px;border-radius:2px;background:#e5e7eb;top:50%;transform:translateY(-50%);pointer-events:none}
+.dual-slider-range{position:absolute;height:4px;border-radius:2px;background:#2563eb;top:50%;transform:translateY(-50%);pointer-events:none}
+.dual-slider input[type="range"]{position:absolute;width:100%;height:40px;top:0;margin:0;padding:0;pointer-events:none;-webkit-appearance:none;appearance:none;background:transparent;outline:none}
+.dual-slider input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:#2563eb;cursor:pointer;box-shadow:0 2px 4px rgba(0,0,0,0.1);pointer-events:auto}
+.dual-slider input[type="range"]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#2563eb;cursor:pointer;border:none;box-shadow:0 2px 4px rgba(0,0,0,0.1);pointer-events:auto}
+.dual-slider input[type="range"]::-moz-range-track{background:transparent;border:none}
+</style>
+</helmet>
+<div style="width:1280px;height:840px;display:flex;flex-direction:column;background:linear-gradient(135deg,#f5f7fa 0%,#e8eef5 100%)">
+<nav style="padding:16px 40px;border-bottom:2px solid #2563eb;display:flex;gap:24px;align-items:center;background:transparent">
+<a href="Search.dc.html" style="font-size:14px;font-weight:600;color:#2563eb;text-decoration:none;padding:8px 12px;border-bottom:3px solid #2563eb">🔍 Search</a>
+<a href="MarkedPapers.dc.html" style="font-size:14px;font-weight:500;color:#666;text-decoration:none;padding:8px 12px;transition:all 0.2s">📌 My Papers</a>
+</nav>
+<div style="flex:1;display:flex">
+<div id="sidebar" style="width:280px;background:white;border-right:1px solid #e5e7eb;padding:32px 24px;overflow-y:auto;display:none;flex-direction:column;gap:32px">
+<div>
+<label style="display:block;font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:16px">Discipline</label>
+<div style="display:flex;flex-direction:column;gap:8px">
+<button class="chip active" style="width:100%;text-align:left;justify-content:flex-start">Computer Science</button>
+<button class="chip" style="width:100%;text-align:left;justify-content:flex-start">Medicine</button>
+<button class="chip" style="width:100%;text-align:left;justify-content:flex-start">Biology</button>
+<button class="chip" style="width:100%;text-align:left;justify-content:flex-start">Physics</button>
+<button class="chip" style="width:100%;text-align:left;justify-content:flex-start">Chemistry</button>
+<button class="chip" style="width:100%;text-align:left;justify-content:flex-start">Mathematics</button>
+<button class="chip" style="width:100%;text-align:left;justify-content:flex-start">Engineering</button>
+<button class="chip" style="width:100%;text-align:left;justify-content:flex-start">Psychology</button>
+<button class="chip" style="width:100%;text-align:left;justify-content:flex-start">Economics</button>
+<button class="chip" style="width:100%;text-align:left;justify-content:flex-start">Management</button>
+<button class="chip" style="width:100%;text-align:left;justify-content:flex-start">Environmental</button>
+</div>
+</div>
+<div>
+<label style="display:block;font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:16px">Year Range</label>
+<div class="slider-container">
+<div class="dual-slider">
+<div class="dual-slider-track"></div>
+<div class="dual-slider-range" id="range" style="left:0;right:0"></div>
+<input type="range" id="slider-1" min="1990" max="2026" value="2010" />
+<input type="range" id="slider-2" min="1990" max="2026" value="2019" />
+</div>
+<div style="display:flex;gap:8px;justify-content:space-between;margin-top:8px">
+<div style="text-align:center;flex:1">
+<div style="font-size:10px;color:#999;margin-bottom:2px">From</div>
+<div style="font-size:14px;font-weight:600;color:#2563eb" id="label-1">2010</div>
+</div>
+<div style="text-align:center;color:#999;font-size:10px">–</div>
+<div style="text-align:center;flex:1">
+<div style="font-size:10px;color:#999;margin-bottom:2px">To</div>
+<div style="font-size:14px;font-weight:600;color:#2563eb" id="label-2">2019</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:32px;padding:0 40px">
+<div style="text-align:center;gap:12px;display:flex;flex-direction:column">
+<h1 style="margin:0;font-size:48px;font-weight:700;color:#141413">Research Assistant</h1>
+<p style="margin:0;font-size:16px;color:#666;font-weight:400">Discover, organize, and consume academic papers</p>
+</div>
+<div style="width:100%;max-width:500px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;gap:12px;align-items:stretch">
+<input type="text" placeholder="e.g., machine learning, CRISPR gene therapy..." class="input-filled" style="flex:1" />
+<button title="Search" style="width:44px;height:auto;background:#007AFF;color:white;border:none;border-radius:12px;font-size:20px;cursor:pointer">🔍</button>
+</div>
+<button id="advanced-btn" style="align-self:center;background:none;border:none;color:#2563eb;font-size:13px;font-weight:500;cursor:pointer;text-decoration:underline;padding:0">Advanced Search ⚙️</button>
+<p style="margin:0;font-size:12px;color:#999;text-align:center">Try: "quantum computing", "climate change"</p>
+</div>
+<div style="width:100%;max-width:500px;border-top:1px solid #e5e7eb;padding-top:20px">
+<p style="margin:0 0 12px 0;font-size:12px;color:#666;font-weight:600">Recent Searches</p>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<button style="padding:6px 10px;background:white;border:1px solid #ddd;border-radius:4px;font-size:12px;color:#333;cursor:pointer;transition:all 0.2s">Deep Learning</button>
+<button style="padding:6px 10px;background:white;border:1px solid #ddd;border-radius:4px;font-size:12px;color:#333;cursor:pointer;transition:all 0.2s">Renewable Energy</button>
+<button style="padding:6px 10px;background:white;border:1px solid #ddd;border-radius:4px;font-size:12px;color:#333;cursor:pointer;transition:all 0.2s">Immunotherapy</button>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":840}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+
+  componentDidMount() {
+    const advancedBtn = document.getElementById('advanced-btn');
+    const sidebar = document.getElementById('sidebar');
+
+    advancedBtn.addEventListener('click', () => {
+      const isHidden = sidebar.style.display === 'none';
+      sidebar.style.display = isHidden ? 'flex' : 'none';
+      advancedBtn.textContent = isHidden ? 'Hide Filters ✕' : 'Advanced Search ⚙️';
+    });
+
+    const slider1 = document.getElementById('slider-1');
+    const slider2 = document.getElementById('slider-2');
+    const range = document.getElementById('range');
+    const label1 = document.getElementById('label-1');
+    const label2 = document.getElementById('label-2');
+
+    const updateRange = () => {
+      const val1 = parseInt(slider1.value);
+      const val2 = parseInt(slider2.value);
+      const min = Math.min(val1, val2);
+      const max = Math.max(val1, val2);
+      const minPercent = ((min - 1990) / (2026 - 1990)) * 100;
+      const maxPercent = 100 - ((max - 1990) / (2026 - 1990)) * 100;
+      range.style.left = minPercent + '%';
+      range.style.right = maxPercent + '%';
+      label1.textContent = min;
+      label2.textContent = max;
+    };
+
+    slider1.addEventListener('input', updateRange);
+    slider2.addEventListener('input', updateRange);
+    updateRange();
+  }
+}
+</script>
+</body>
+</html>

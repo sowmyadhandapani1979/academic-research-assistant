@@ -1,0 +1,14 @@
+---
+description: UX behavior tests drive every UI change (Given/When/Then from the canvas and PRD).
+alwaysApply: true
+---
+
+# UX behavior-driven implementation
+
+Do not change screens, flows, or Listen behavior without a failing UX behavior spec first.
+
+- Specs live in `src/test/behavior/` and describe **user-visible** outcomes from `ux-design/` and `docs/research-assistant-prd.md`.
+- Style: `Given` a screen, `When` the user acts, `Then` the UI/state matches the canvas/PRD (names, flags, filters, voice commands).
+- Red → implement the smallest change → green. Do not “fix” UX by weakening or deleting a spec unless the PRD/canvas changed.
+- Keep presentation in `src/theme/` and `src/ui/`; tests should go through pages/routes, not private CSS class maps.
+- After UI work, run `npm test`.

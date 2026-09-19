@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>My Papers - Mobile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;background:linear-gradient(135deg,#f5f7fa 0%,#e8eef5 100%)}
+a{color:#007AFF}a:hover{color:#0051D5}
+[title]{position:relative}
+[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:11px;line-height:1.2;padding:4px 8px;border-radius:6px;white-space:nowrap;z-index:5;pointer-events:none}
+</style>
+</helmet>
+<div style="width:375px;height:812px;display:flex;flex-direction:column;background:linear-gradient(135deg,#f5f7fa 0%,#e8eef5 100%)">
+<div style="padding:12px 16px;background:transparent;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center">
+<h1 style="margin:0;font-size:18px;font-weight:700">My Papers</h1>
+<button id="filter-btn" title="Filters" style="width:44px;height:44px;background:#007AFF;color:white;border:none;border-radius:12px;font-size:18px;cursor:pointer">⚙️</button>
+</div>
+<div style="padding:12px 16px;border-bottom:1px solid #e5e7eb;display:flex;gap:8px;flex-direction:column">
+<input type="text" placeholder="Search..." style="padding:10px 14px;border:none;background:#f2f2f7;border-radius:10px;font-size:14px;font-family:inherit" />
+<div id="filter-options" style="display:none;flex-direction:column;gap:8px">
+<select style="padding:8px 12px;border:none;background:white;border:1px solid #ddd;border-radius:10px;font-size:13px;font-family:inherit">
+<option>All Disciplines</option>
+<option selected>Computer Science</option>
+<option>Medicine</option>
+<option>Biology</option>
+</select>
+<select aria-label="Filter by read status" style="padding:8px 12px;border:none;background:white;border:1px solid #ddd;border-radius:10px;font-size:13px;font-family:inherit">
+<option>All Status</option>
+<option>In Progress</option>
+<option>Yet to Start</option>
+<option>Read</option>
+</select>
+<select aria-label="Sort papers" style="padding:8px 12px;border:none;background:white;border:1px solid #ddd;border-radius:10px;font-size:13px;font-family:inherit">
+<option selected>Reading status</option>
+<option>Recently saved</option>
+</select>
+</div>
+</div>
+<div style="flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:10px">
+<div style="padding:14px;background:#fef3c7;border-radius:12px;border:1px solid #fde047">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+<div style="flex:1">
+<h3 style="margin:0 0 4px 0;font-size:14px;font-weight:600">Attention Is All You Need</h3>
+<p style="margin:0;font-size:12px;color:#666">Vaswani et al. · 2017</p>
+</div>
+<span style="display:inline-block;padding:2px 8px;background:#fed7aa;color:#9a3412;border-radius:6px;font-size:10px;font-weight:500">In Progress</span>
+</div>
+<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+<span style="display:inline-block;padding:3px 8px;background:#dbeafe;color:#1e40af;border-radius:6px;font-size:10px">deep-learning</span>
+<span style="display:inline-block;padding:3px 8px;background:#dbeafe;color:#1e40af;border-radius:6px;font-size:10px">nlp</span>
+</div>
+<div style="display:flex;gap:6px">
+<a href="ReadingVisualMobile.dc.html" title="Open" style="width:44px;height:44px;background:#007AFF;color:white;border:none;border-radius:10px;font-size:16px;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center">📖</a>
+<button title="Listen" style="width:44px;height:44px;background:#f2f2f7;color:#007AFF;border:none;border-radius:10px;font-size:16px;cursor:pointer">🎧</button>
+<button title="Summary" style="width:44px;height:44px;background:#f2f2f7;color:#9933FF;border:none;border-radius:10px;font-size:16px;cursor:pointer">📋</button>
+<button title="Remove" style="width:44px;height:44px;background:#f2f2f7;color:#FF3B30;border:none;border-radius:10px;font-size:14px;cursor:pointer">🗑</button>
+</div>
+</div>
+<div style="padding:14px;background:white;border-radius:12px;border:1px solid #e5e7eb">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+<div style="flex:1">
+<h3 style="margin:0 0 4px 0;font-size:14px;font-weight:600">GPT-2</h3>
+<p style="margin:0;font-size:12px;color:#666">Radford et al. · 2019</p>
+</div>
+<span style="display:inline-block;padding:2px 8px;background:#dcfce7;color:#166534;border-radius:6px;font-size:10px;font-weight:500">Yet to Start</span>
+</div>
+<div style="display:flex;gap:6px">
+<a href="ReadingVisualMobile.dc.html" title="Open" style="width:44px;height:44px;background:#007AFF;color:white;border:none;border-radius:10px;font-size:16px;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center">📖</a>
+<button title="Listen" style="width:44px;height:44px;background:#f2f2f7;color:#007AFF;border:none;border-radius:10px;font-size:16px;cursor:pointer">🎧</button>
+<button title="Summary" style="width:44px;height:44px;background:#f2f2f7;color:#9933FF;border:none;border-radius:10px;font-size:16px;cursor:pointer">📋</button>
+<button title="Remove" style="width:44px;height:44px;background:#f2f2f7;color:#FF3B30;border:none;border-radius:10px;font-size:14px;cursor:pointer">🗑</button>
+</div>
+</div>
+<div style="padding:14px;background:white;border-radius:12px;border:1px solid #e5e7eb">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+<div style="flex:1">
+<h3 style="margin:0 0 4px 0;font-size:14px;font-weight:600">BERT</h3>
+<p style="margin:0;font-size:12px;color:#666">Devlin et al. · 2018</p>
+</div>
+<span style="display:inline-block;padding:2px 8px;background:#dbeafe;color:#1e40af;border-radius:6px;font-size:10px;font-weight:500">Read</span>
+</div>
+<div style="display:flex;gap:6px">
+<a href="ReadingVisualMobile.dc.html" title="Open" style="width:44px;height:44px;background:#007AFF;color:white;border:none;border-radius:10px;font-size:16px;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center">📖</a>
+<button title="Listen" style="width:44px;height:44px;background:#f2f2f7;color:#007AFF;border:none;border-radius:10px;font-size:16px;cursor:pointer">🎧</button>
+<button title="Summary" style="width:44px;height:44px;background:#f2f2f7;color:#9933FF;border:none;border-radius:10px;font-size:16px;cursor:pointer">📋</button>
+<button title="Remove" style="width:44px;height:44px;background:#f2f2f7;color:#FF3B30;border:none;border-radius:10px;font-size:14px;cursor:pointer">🗑</button>
+</div>
+</div>
+</div>
+<nav style="padding:12px 0;border-top:1px solid #e5e7eb;background:transparent;display:flex;justify-content:space-around">
+<a href="SearchMobile.dc.html" style="flex:1;text-align:center;padding:8px;text-decoration:none;color:#666;font-size:12px">🔍 Search</a>
+<a href="MarkedPapersMobile.dc.html" style="flex:1;text-align:center;padding:8px;text-decoration:none;color:#007AFF;font-size:12px;font-weight:600;border-top:3px solid #007AFF;margin-top:-12px">📌 My Papers</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":375,"height":812}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+
+  componentDidMount() {
+    const filterBtn = document.getElementById('filter-btn');
+    const filterOptions = document.getElementById('filter-options');
+
+    filterBtn.addEventListener('click', () => {
+      const isHidden = filterOptions.style.display === 'none';
+      filterOptions.style.display = isHidden ? 'flex' : 'none';
+      filterBtn.style.background = isHidden ? '#0051D5' : '#007AFF';
+    });
+  }
+}
+</script>
+</body>
+</html>

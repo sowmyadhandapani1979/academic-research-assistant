@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Search Papers - Mobile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;background:linear-gradient(135deg,#f5f7fa 0%,#e8eef5 100%)}
+a{color:#007AFF}a:hover{color:#0051D5}
+[title]{position:relative}
+[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#111;color:#fff;font-size:11px;line-height:1.2;padding:4px 8px;border-radius:6px;white-space:nowrap;z-index:5;pointer-events:none}
+h1{letter-spacing:-0.5px}
+h2{letter-spacing:-0.8px}
+.filter-label{font-size:12px;font-weight:600;color:#333;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.chip{padding:8px 12px;background:white;border:1.5px solid #ddd;border-radius:20px;font-size:13px;font-weight:500;color:#333;cursor:pointer;transition:all 0.2s}
+.chip:active{background:#007AFF;color:white;border-color:#007AFF;transform:scale(0.96)}
+</style>
+</helmet>
+<div style="width:375px;height:812px;display:flex;flex-direction:column;background:linear-gradient(135deg,#f5f7fa 0%,#e8eef5 100%)">
+<div style="padding:12px 16px;background:transparent;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center">
+<h1 style="margin:0;font-size:18px;font-weight:700">Papers</h1>
+<button id="filter-btn" title="Filters" style="width:44px;height:44px;background:#007AFF;color:white;border:none;border-radius:12px;font-size:18px;cursor:pointer">⚙️</button>
+</div>
+<div id="filter-panel" style="padding:14px 16px;border-bottom:1px solid #e5e7eb;display:none;flex-direction:column;gap:12px;background:white">
+<div>
+<p class="filter-label">Discipline</p>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<button class="chip active" style="border-color:#007AFF;background:#007AFF;color:white">CS</button>
+<button class="chip">Med</button>
+<button class="chip">Bio</button>
+<button class="chip">Phys</button>
+<button class="chip">Mgmt</button>
+</div>
+</div>
+<div>
+<p class="filter-label">Year Range</p>
+<div style="display:flex;gap:6px">
+<input type="range" min="1990" max="2026" value="2010" style="flex:1;height:4px" />
+<input type="range" min="1990" max="2026" value="2019" style="flex:1;height:4px" />
+</div>
+<div style="display:flex;gap:6px;justify-content:space-between;font-size:12px;color:#666;margin-top:6px">
+<span id="year-from">2010</span>
+<span id="year-to">2019</span>
+</div>
+</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:24px;padding:32px 20px">
+<div style="text-align:center;gap:12px;display:flex;flex-direction:column">
+<h2 style="margin:0;font-size:28px;font-weight:700;color:#141413">Research</h2>
+<p style="margin:0;font-size:16px;color:#666;font-weight:400">Find papers</p>
+</div>
+<div style="width:100%;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;gap:8px;align-items:stretch">
+<input type="text" placeholder="Topic or keyword..." style="flex:1;padding:14px 16px;border:none;background:white;border-radius:12px;font-size:15px;font-weight:500;font-family:inherit" />
+<button title="Search" style="width:44px;background:#007AFF;color:white;border:none;border-radius:12px;font-size:18px;cursor:pointer">🔍</button>
+</div>
+</div>
+<div style="width:100%;border-top:1px solid #e5e7eb;padding-top:16px">
+<p style="margin:0 0 10px 0;font-size:13px;color:#666;font-weight:500">Recent</p>
+<div style="display:flex;flex-direction:column;gap:8px">
+<button style="padding:10px;background:white;border:none;border-radius:10px;font-size:13px;color:#333;cursor:pointer;text-align:left">Deep Learning</button>
+<button style="padding:10px;background:white;border:none;border-radius:10px;font-size:13px;color:#333;cursor:pointer;text-align:left">Transformers</button>
+</div>
+</div>
+</div>
+<nav style="padding:12px 0;border-top:1px solid #e5e7eb;background:transparent;display:flex;justify-content:space-around">
+<a href="SearchMobile.dc.html" style="flex:1;text-align:center;padding:8px;text-decoration:none;color:#007AFF;font-size:12px;font-weight:600;border-top:3px solid #007AFF;margin-top:-12px">🔍 Search</a>
+<a href="MarkedPapersMobile.dc.html" style="flex:1;text-align:center;padding:8px;text-decoration:none;color:#666;font-size:12px">📌 My Papers</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":375,"height":812}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+
+  componentDidMount() {
+    const filterBtn = document.getElementById('filter-btn');
+    const filterPanel = document.getElementById('filter-panel');
+
+    filterBtn.addEventListener('click', () => {
+      const isHidden = filterPanel.style.display === 'none';
+      filterPanel.style.display = isHidden ? 'flex' : 'none';
+      filterBtn.style.background = isHidden ? '#0051D5' : '#007AFF';
+    });
+
+    const sliders = filterPanel.querySelectorAll('input[type="range"]');
+    const yearFrom = document.getElementById('year-from');
+    const yearTo = document.getElementById('year-to');
+
+    const updateYears = () => {
+      const val1 = parseInt(sliders[0].value);
+      const val2 = parseInt(sliders[1].value);
+      const min = Math.min(val1, val2);
+      const max = Math.max(val1, val2);
+      yearFrom.textContent = min;
+      yearTo.textContent = max;
+    };
+
+    sliders.forEach(slider => slider.addEventListener('input', updateYears));
+  }
+}
+</script>
+</body>
+</html>
