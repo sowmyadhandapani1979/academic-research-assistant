@@ -6,6 +6,7 @@ import { ReaderPage } from "./pages/ReaderPage";
 import { ResultsPage } from "./pages/ResultsPage";
 import { SearchPage } from "./pages/SearchPage";
 import { LibraryProvider } from "./store/LibraryContext";
+import { ThemeProvider } from "./theme/ThemeProvider";
 
 export function AppRoutes() {
   return (
@@ -24,10 +25,12 @@ export function AppRoutes() {
 
 export default function App() {
   return (
-    <LibraryProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </LibraryProvider>
+    <ThemeProvider>
+      <LibraryProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </LibraryProvider>
+    </ThemeProvider>
   );
 }

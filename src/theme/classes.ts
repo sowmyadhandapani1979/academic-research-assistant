@@ -44,13 +44,19 @@ export const ui = {
   recentsDesktop: "hidden md:flex flex-wrap gap-2",
   recentsMobile: "md:hidden flex flex-col gap-2",
 
-  shell: "min-h-screen flex flex-col bg-[linear-gradient(135deg,var(--color-hero-from)_0%,var(--color-hero-to)_100%)]",
+  shell: "relative min-h-screen flex flex-col bg-[linear-gradient(135deg,var(--color-hero-from)_0%,var(--color-hero-to)_100%)]",
+  themeGroup: "ml-auto flex items-center rounded-full bg-gray-btn p-0.5 w-fit",
+  themeOption:
+    "group relative inline-flex items-center justify-center w-8 h-8 rounded-full border-0 bg-transparent text-muted cursor-pointer",
+  themeOptionOn:
+    "group relative inline-flex items-center justify-center w-8 h-8 rounded-full border-0 bg-surface text-ink cursor-pointer shadow-sm",
   mobileHeader: "flex md:hidden items-center justify-between px-4 py-3 border-b border-line bg-transparent",
   mobileTitle: "m-0 text-[18px] font-bold",
   menuButton: "w-10 h-10 bg-transparent border-0 text-[20px] cursor-pointer",
   mobileMenu: "md:hidden border-b border-line bg-surface px-4 py-2 flex flex-col gap-1",
   mobileMenuLink: "py-2 text-ios no-underline",
-  desktopNav: "hidden md:flex px-10 py-4 border-b-2 border-accent gap-6 items-center bg-transparent",
+  desktopNav: "flex px-4 md:px-10 py-3 md:py-4 border-b-2 border-accent gap-6 items-center bg-transparent",
+  navLinkDesktop: "hidden md:inline",
   navLink: "text-[14px] no-underline px-3 py-2 transition-colors font-medium text-muted",
   navLinkActive: "text-[14px] no-underline px-3 py-2 transition-colors font-semibold text-accent border-b-[3px] border-accent",
   tabBar: "md:hidden flex justify-around py-3 border-t border-line bg-transparent",
@@ -60,9 +66,9 @@ export const ui = {
   main: "flex-1 min-h-0 flex flex-col",
 
   input:
-    "flex-1 px-4 py-3.5 md:px-[18px] md:py-4 border-0 rounded-xl text-[15px] md:text-base bg-surface shadow-[0_1px_3px_rgba(0,0,0,0.08)]",
+    "flex-1 px-4 py-3.5 md:px-[18px] md:py-4 border-0 rounded-xl text-[15px] md:text-base bg-surface text-ink shadow-[var(--shadow-input)]",
   inputBar:
-    "flex-1 px-3.5 py-2.5 md:px-4 md:py-3 border-0 bg-surface rounded-[10px] md:rounded-lg text-sm shadow-[0_1px_3px_rgba(0,0,0,0.08)]",
+    "flex-1 px-3.5 py-2.5 md:px-4 md:py-3 border-0 bg-surface rounded-[10px] md:rounded-lg text-sm text-ink shadow-[var(--shadow-input)]",
   inputLibrary:
     "flex-1 px-3.5 py-2.5 md:px-4 md:py-2.5 border-0 md:border md:border-input-border bg-gray-btn md:bg-surface rounded-[10px] md:rounded-md text-sm md:max-w-[300px]",
   inputTag: "hidden md:block px-3 py-1.5 border border-input-border rounded text-xs w-[120px]",
@@ -72,7 +78,7 @@ export const ui = {
     "w-full h-[70px] md:h-20 p-2 border border-input-border rounded-md text-xs resize-none box-border",
 
   iconBtn:
-    "group relative inline-flex items-center justify-center w-11 h-11 shrink-0 border-0 rounded-xl cursor-pointer no-underline bg-gray-btn text-ios",
+    "group relative inline-flex items-center justify-center w-11 h-11 shrink-0 border-0 rounded-full cursor-pointer no-underline bg-gray-btn text-ios",
   iconBtnPrimary: "bg-ios text-white",
   iconBtnSuccess: "bg-read-ok text-white",
   iconBtnSummary: "bg-gray-btn text-summary",
@@ -80,57 +86,57 @@ export const ui = {
   iconBtnActive: "ring-2 ring-accent",
   iconBtnGlyph: "text-[22px] leading-none",
   iconBtnTip:
-    "pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+6px)] z-30 whitespace-nowrap rounded-md bg-ink text-white text-[11px] font-medium px-2 py-1 opacity-0 shadow-sm group-hover:opacity-100 group-focus-visible:opacity-100",
+    "pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+6px)] z-30 whitespace-nowrap rounded-md bg-ink text-on-ink text-[11px] font-medium px-2 py-1 opacity-0 shadow-sm group-hover:opacity-100 group-focus-visible:opacity-100",
   btnPrimary:
-    "hidden md:inline-flex px-8 py-4 bg-accent text-white border-0 rounded-lg text-base font-semibold cursor-pointer hover:bg-accent-hover",
+    "hidden md:inline-flex px-8 py-4 bg-accent text-white border-0 rounded-full text-base font-semibold cursor-pointer hover:bg-accent-hover",
   btnIos:
-    "md:hidden w-full py-3.5 bg-ios text-white border-0 rounded-xl text-[15px] font-semibold cursor-pointer",
+    "md:hidden w-full py-3.5 bg-ios text-white border-0 rounded-full text-[15px] font-semibold cursor-pointer",
   btnIosInline:
-    "hidden md:inline-flex px-6 py-3 bg-ios text-white border-0 rounded-xl text-sm font-medium cursor-pointer",
+    "hidden md:inline-flex px-6 py-3 bg-ios text-white border-0 rounded-full text-sm font-medium cursor-pointer",
   btnPlay:
-    "px-4 py-2 bg-ios text-white border-0 rounded-xl text-sm font-medium cursor-pointer inline-flex",
+    "px-4 py-2 bg-ios text-white border-0 rounded-full text-sm font-medium cursor-pointer inline-flex",
   btnMic:
-    "px-3 py-2 bg-gray-btn text-ios border-0 rounded-xl text-xs font-medium cursor-pointer",
-  btnChip: "px-3 py-2 bg-surface border border-input-border rounded-md text-sm text-ink cursor-pointer",
+    "px-3 py-2 bg-gray-btn text-ios border-0 rounded-full text-xs font-medium cursor-pointer",
+  btnChip: "px-3 py-2 bg-surface border border-input-border rounded-full text-sm text-ink cursor-pointer",
   btnChipMobile:
-    "px-2.5 py-2.5 bg-surface border-0 rounded-[10px] text-[13px] text-ink cursor-pointer text-left",
+    "px-2.5 py-2.5 bg-surface border-0 rounded-full text-[13px] text-ink cursor-pointer text-left",
   btnGhost:
-    "px-5 py-3 bg-gray-btn text-ios border-0 rounded-xl text-[13px] font-medium cursor-pointer no-underline",
+    "px-5 py-3 bg-gray-btn text-ios border-0 rounded-full text-[13px] font-medium cursor-pointer no-underline",
   btnGhostSm:
-    "px-3.5 py-2.5 bg-gray-btn text-ios border-0 rounded-[10px] text-xs font-medium cursor-pointer no-underline",
+    "px-3.5 py-2.5 bg-gray-btn text-ios border-0 rounded-full text-xs font-medium cursor-pointer no-underline",
   btnSummary:
-    "px-5 py-3 bg-gray-btn text-summary no-underline rounded-xl text-[13px] font-medium",
+    "px-5 py-3 bg-gray-btn text-summary no-underline rounded-full text-[13px] font-medium",
   btnSummarySm:
-    "px-3.5 py-2.5 bg-gray-btn text-summary no-underline rounded-[10px] text-xs font-medium",
+    "px-3.5 py-2.5 bg-gray-btn text-summary no-underline rounded-full text-xs font-medium",
   btnSuccess:
-    "px-5 py-3 bg-read-ok text-white border-0 rounded-xl text-[13px] font-medium cursor-pointer",
+    "px-5 py-3 bg-read-ok text-white border-0 rounded-full text-[13px] font-medium cursor-pointer",
   btnSuccessSm:
-    "px-3.5 py-2.5 bg-read-ok text-white border-0 rounded-[10px] text-xs font-medium cursor-pointer",
+    "px-3.5 py-2.5 bg-read-ok text-white border-0 rounded-full text-xs font-medium cursor-pointer",
   btnBack:
-    "px-4 py-2.5 bg-gray-btn rounded-xl text-[13px] no-underline text-ios font-medium shrink-0",
+    "px-4 py-2.5 bg-gray-btn rounded-full text-[13px] no-underline text-ios font-medium shrink-0",
   btnBackSm:
-    "px-3.5 py-2.5 md:px-4 bg-gray-btn rounded-[10px] md:rounded-xl text-xs md:text-[13px] no-underline text-ios font-medium shrink-0",
+    "px-3.5 py-2.5 md:px-4 bg-gray-btn rounded-full text-xs md:text-[13px] no-underline text-ios font-medium shrink-0",
   btnFullPrimary:
-    "w-full mt-2 py-2 bg-accent text-white border-0 rounded-md text-xs font-medium cursor-pointer",
+    "w-full mt-2 py-2 bg-accent text-white border-0 rounded-full text-xs font-medium cursor-pointer",
   btnFullIos:
-    "w-full py-3 bg-ios text-white border-0 rounded-xl text-[13px] font-medium cursor-pointer",
+    "w-full py-3 bg-ios text-white border-0 rounded-full text-[13px] font-medium cursor-pointer",
   btnFullGhost:
-    "w-full py-3 bg-gray-btn border-0 rounded-xl text-[13px] text-ios font-medium cursor-pointer",
+    "w-full py-3 bg-gray-btn border-0 rounded-full text-[13px] text-ios font-medium cursor-pointer",
   btnFullIosSm:
-    "w-full py-2.5 bg-ios text-white border-0 rounded-[10px] text-xs font-medium cursor-pointer",
+    "w-full py-2.5 bg-ios text-white border-0 rounded-full text-xs font-medium cursor-pointer",
   btnFullGhostSm:
-    "w-full py-2.5 bg-gray-btn border-0 rounded-[10px] text-xs text-ios font-medium cursor-pointer",
+    "w-full py-2.5 bg-gray-btn border-0 rounded-full text-xs text-ios font-medium cursor-pointer",
   btnReadLink:
-    "flex-1 md:flex-none text-center px-0 md:px-5 py-2.5 md:py-3 bg-ios text-white no-underline rounded-[10px] md:rounded-xl text-xs md:text-[13px] font-medium",
+    "flex-1 md:flex-none text-center px-4 md:px-5 py-2.5 md:py-3 bg-ios text-white no-underline rounded-full text-xs md:text-[13px] font-medium",
   btnListenLink:
-    "flex-1 md:flex-none text-center px-0 md:px-5 py-2.5 md:py-3 bg-gray-btn text-ios no-underline rounded-[10px] md:rounded-xl text-xs md:text-[13px] font-medium",
+    "flex-1 md:flex-none text-center px-4 md:px-5 py-2.5 md:py-3 bg-gray-btn text-ios no-underline rounded-full text-xs md:text-[13px] font-medium",
   btnNotesLink:
-    "flex-1 md:flex-none text-center px-0 md:px-5 py-2.5 md:py-3 bg-gray-btn text-summary no-underline rounded-[10px] md:rounded-xl text-xs md:text-[13px] font-medium",
+    "flex-1 md:flex-none text-center px-4 md:px-5 py-2.5 md:py-3 bg-gray-btn text-summary no-underline rounded-full text-xs md:text-[13px] font-medium",
   btnMobileRead:
-    "md:hidden block w-full py-2.5 bg-ios text-white text-center no-underline rounded-[10px] text-xs font-medium",
+    "md:hidden block w-full py-2.5 bg-ios text-white text-center no-underline rounded-full text-xs font-medium",
   titleLink:
     "text-inherit no-underline hover:underline hover:text-ios",
-  mark: "w-12 h-12 shrink-0 border-0 rounded-[14px] text-[22px] cursor-pointer flex items-center justify-center",
+  mark: "w-12 h-12 shrink-0 border-0 rounded-full text-[22px] cursor-pointer flex items-center justify-center",
   markOn: "bg-flag text-white",
   markOff: "bg-gray-btn text-muted",
 

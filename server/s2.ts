@@ -1,6 +1,6 @@
-import type { Paper } from "../src/types.ts";
-import { scholarlyPlainText } from "../src/lib/plainText.ts";
-import { HttpError } from "./types.ts";
+import type { Paper } from "../src/types.js";
+import { scholarlyPlainText } from "../src/lib/plainText.js";
+import { HttpError } from "./types.js";
 
 const S2 = "https://api.semanticscholar.org/graph/v1";
 const FIELDS =

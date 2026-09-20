@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { bootstrapApp } from "../server/bootstrap.ts";
+import { bootstrapApp } from "../server/bootstrap.js";
 
 const app = bootstrapApp();
 

@@ -1,12 +1,12 @@
 /** @vitest-environment node */
 import request from "supertest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createApp } from "./app.ts";
-import { createDb } from "./db.ts";
-import { HttpError } from "./types.ts";
-import type { S2Client } from "./s2.ts";
-import { s2ResetQuiet } from "./s2.ts";
-import type { Paper } from "../src/types.ts";
+import { createApp } from "./app.js";
+import { createDb } from "./db.js";
+import { HttpError } from "./types.js";
+import type { S2Client } from "./s2.js";
+import { s2ResetQuiet } from "./s2.js";
+import type { Paper } from "../src/types.js";
 
 const sample: Paper = {
   id: "s2-1",

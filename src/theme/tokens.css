@@ -1,6 +1,7 @@
 @theme {
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --color-ink: #141413;
+  --color-on-ink: #ffffff;
   --color-muted: #666666;
   --color-body: #555555;
   --color-hint: #999999;
@@ -40,6 +41,57 @@
   --color-note-b-border: #93c5fd;
   --color-note-c: #dcfce7;
   --color-note-c-border: #86efac;
-  --radius-button: 12px;
+  --radius-button: 9999px;
   --radius-card: 8px;
+}
+
+:root {
+  color-scheme: light;
+  --shadow-input: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-ink: #f4f4f5;
+  --color-on-ink: #18181b;
+  --color-muted: #a1a1aa;
+  --color-body: #d4d4d8;
+  --color-hint: #71717a;
+  --color-accent: #60a5fa;
+  --color-accent-hover: #93c5fd;
+  --color-ios: #0a84ff;
+  --color-flag: #ff453a;
+  --color-read-ok: #30d158;
+  --color-summary: #bf5af2;
+  --color-page: #12141a;
+  --color-nav: #12141a;
+  --color-surface: #1c212b;
+  --color-line: #2e3544;
+  --color-input-border: #3f4758;
+  --color-chip: #1e3a5f;
+  --color-chip-text: #93c5fd;
+  --color-chip-purple: #3b0764;
+  --color-chip-purple-text: #e9d5ff;
+  --color-chip-orange: #431407;
+  --color-chip-orange-text: #fdba74;
+  --color-unread-bg: #14532d;
+  --color-unread-text: #86efac;
+  --color-read-bg: #1e3a8a;
+  --color-read-text: #93c5fd;
+  --color-amber-row: #422006;
+  --color-amber-border: #a16207;
+  --color-gray-btn: #2a3142;
+  --color-hero-from: #12141a;
+  --color-hero-to: #1a2233;
+  --color-note-panel: #1a1f2a;
+  --color-summary-card: #0c1929;
+  --color-summary-border: #0284c7;
+  --color-summary-heading: #7dd3fc;
+  --color-note-a: #422006;
+  --color-note-a-border: #a16207;
+  --color-note-b: #1e3a5f;
+  --color-note-b-border: #3b82f6;
+  --color-note-c: #14532d;
+  --color-note-c-border: #16a34a;
+  --shadow-input: 0 1px 3px rgba(0, 0, 0, 0.45);
 }

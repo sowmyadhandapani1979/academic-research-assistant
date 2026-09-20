@@ -4,8 +4,8 @@ import { EXAMPLE_QUERIES } from "../data/fixtures";
 import { useLibrary } from "../store/LibraryContext";
 import { SearchHero } from "../ui/SearchHero";
 import {
-  DEFAULT_YEAR_FROM,
-  DEFAULT_YEAR_TO,
+  SEARCH_YEAR_MAX,
+  SEARCH_YEAR_MIN,
   resultsPath,
   type DisciplineId,
 } from "../lib/searchFilters";
@@ -14,9 +14,9 @@ export function SearchPage() {
   const navigate = useNavigate();
   const { recents, rememberSearch } = useLibrary();
   const [q, setQ] = useState("");
-  const [discipline, setDiscipline] = useState<DisciplineId>("computer-science");
-  const [yearFrom, setYearFrom] = useState(DEFAULT_YEAR_FROM);
-  const [yearTo, setYearTo] = useState(DEFAULT_YEAR_TO);
+  const [discipline, setDiscipline] = useState<DisciplineId>("any");
+  const [yearFrom, setYearFrom] = useState(SEARCH_YEAR_MIN);
+  const [yearTo, setYearTo] = useState(SEARCH_YEAR_MAX);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   function go(query: string) {

@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
 import type { ReactNode } from "react";
 import { ui } from "../theme/classes";
+import { ThemeSwitch } from "./ThemeSwitch";
 
 export type AppChromeProps = {
   searchActive: boolean;
@@ -53,13 +54,20 @@ export function AppChrome({
         </div>
       )}
 
-      <nav className={ui.desktopNav}>
-        <NavLink to="/" className={searchActive ? ui.navLinkActive : ui.navLink}>
+      <nav className={ui.desktopNav} aria-label="Main">
+        <NavLink
+          to="/"
+          className={`${searchActive ? ui.navLinkActive : ui.navLink} ${ui.navLinkDesktop}`}
+        >
           🔍 Search
         </NavLink>
-        <NavLink to="/library" className={papersNav ? ui.navLinkActive : ui.navLink}>
+        <NavLink
+          to="/library"
+          className={`${papersNav ? ui.navLinkActive : ui.navLink} ${ui.navLinkDesktop}`}
+        >
           📌 My Papers
         </NavLink>
+        <ThemeSwitch />
       </nav>
 
       <div className={ui.main}>

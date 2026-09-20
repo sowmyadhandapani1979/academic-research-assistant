@@ -1,8 +1,8 @@
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { createApp } from "./app.ts";
-import { createDb } from "./db.ts";
-import { createS2, s2ResetQuiet } from "./s2.ts";
+import { createApp } from "./app.js";
+import { createDb } from "./db.js";
+import { createS2, s2ResetQuiet } from "./s2.js";
 
 export function sqlitePath() {
   if (process.env.VERCEL) return "/tmp/ara.db";

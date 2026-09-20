@@ -1,5 +1,5 @@
-import type { Paper } from "../src/types.ts";
-import { scholarlyPlainText } from "../src/lib/plainText.ts";
+import type { Paper } from "../src/types.js";
+import { scholarlyPlainText } from "../src/lib/plainText.js";
 
 type OpenAlexWork = {
   id?: string;

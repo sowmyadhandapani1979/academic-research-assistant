@@ -103,6 +103,10 @@ if (!("clipboard" in navigator) || !navigator.clipboard) {
 
 afterEach(() => {
   cleanup();
+  localStorage.removeItem("ara-theme");
+  document.documentElement.removeAttribute("data-theme");
+  document.documentElement.classList.remove("dark");
+  document.documentElement.style.colorScheme = "";
   clipboardWriteText.mockClear();
   recognitionInstances.length = 0;
   ttsUtterances.length = 0;
