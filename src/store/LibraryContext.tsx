@@ -464,7 +464,7 @@ export function usePaperEntry(paperId: string) {
 export function usePaper(id: string) {
   const { papers, ensurePaper } = useLibrary();
   useEffect(() => {
-    if (id && !papers[id]) ensurePaper(id);
-  }, [id, papers, ensurePaper]);
+    if (id) ensurePaper(id);
+  }, [id, ensurePaper]);
   return papers[id];
 }

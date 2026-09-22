@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { mockApi } from "../handlers";
 import { renderApp } from "../renderApp";
 
 describe("UX: My Papers library", () => {
@@ -14,6 +15,49 @@ describe("UX: My Papers library", () => {
     expect(getAllByRole("link", { name: /^listen$/i })[0]).toHaveTextContent("🎧");
     expect(getAllByRole("link", { name: /^summary$/i })[0]).toHaveTextContent("📋");
     expect(getAllByRole("button", { name: /remove /i })[0]).toHaveTextContent("🗑");
+  });
+
+  it("Given a marked paper with a PDF, Then Open opens the in-app reader", async () => {
+    const { findByRole, getByRole } = renderApp("/library");
+    await findByRole("heading", { name: /gpt-2/i });
+    const gpt2 = getByRole("heading", { name: /gpt-2/i }).closest("article");
+    const open = gpt2?.querySelector('a[aria-label="Open"]');
+    expect(open).toHaveAttribute("href", "/read/gpt2");
+  });
+
+  it("Given My Papers, Then each row is tagged Full text or Abstract only", async () => {
+    mockApi.catalog.push({
+      id: "no-oa-pdf",
+      title: "Identification and Sense-making in Organizations",
+      authorsShort: "Afshari",
+      authorsFull: "Afshari, L.",
+      year: 2019,
+      abstract: "An abstract-only proceedings paper.",
+      sections: [],
+      related: [],
+      summary: "See abstract.",
+      takeaways: "See abstract.",
+      readTime: "5 min",
+      url: "https://www.semanticscholar.org/paper/no-oa-pdf",
+    });
+    mockApi.library.push({
+      paperId: "no-oa-pdf",
+      tags: [],
+      flagged: true,
+      markedAt: Date.now(),
+      readingStatus: "yet_to_start",
+      isRead: false,
+    });
+    const { findByRole, getByRole } = renderApp("/library");
+    await findByRole("heading", { name: /gpt-2/i });
+    const full = getByRole("heading", { name: /gpt-2/i }).closest("article");
+    const abstractOnly = getByRole("heading", {
+      name: /identification and sense-making/i,
+    }).closest("article");
+    expect(full?.textContent).toMatch(/full text/i);
+    expect(full?.textContent).not.toMatch(/abstract only/i);
+    expect(abstractOnly?.textContent).toMatch(/abstract only/i);
+    expect(abstractOnly?.textContent).not.toMatch(/full text/i);
   });
 
   it("Given mixed reading statuses, Then rows show In Progress, Yet to Start, or Read instead of a flag", async () => {

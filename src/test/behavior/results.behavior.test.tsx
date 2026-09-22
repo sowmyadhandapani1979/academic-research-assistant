@@ -15,6 +15,45 @@ describe("UX: Results screen", () => {
     expect(source).toHaveAttribute("target", "_blank");
   });
 
+  it("Given a paper with a PDF, Then Open opens the in-app reader", async () => {
+    const { findByRole, getByRole } = renderApp("/results?q=Deep%20Learning");
+    await findByRole("heading", { name: /gpt-2/i });
+    const gpt2 = getByRole("heading", { name: /gpt-2/i }).closest("article");
+    const open = gpt2?.querySelector('a[aria-label="Open"]');
+    expect(open).toHaveAttribute("href", "/read/gpt2");
+  });
+
+  it("Given search results, Then each card is tagged Full text or Abstract only before pinning", async () => {
+    msw.use(
+      http.get("/api/papers/search", () =>
+        HttpResponse.json({
+          papers: [
+            papers[2],
+            {
+              ...papers[0],
+              id: "abstract-only-result",
+              title: "Identification and Sense-making in Organizations",
+              authorsShort: "Afshari",
+              pdfUrl: undefined,
+              url: "https://www.semanticscholar.org/paper/abstract-only-result",
+            },
+          ],
+          total: 2,
+        }),
+      ),
+    );
+    const { findByRole, getByRole } = renderApp("/results?q=content-availability");
+    await findByRole("heading", { name: /gpt-2/i });
+    const full = getByRole("heading", { name: /gpt-2/i }).closest("article");
+    const abstractOnly = getByRole("heading", {
+      name: /identification and sense-making/i,
+    }).closest("article");
+    expect(full?.textContent).toMatch(/full text/i);
+    expect(full?.textContent).not.toMatch(/abstract only/i);
+    expect(abstractOnly?.textContent).toMatch(/abstract only/i);
+    expect(abstractOnly?.textContent).not.toMatch(/full text/i);
+  });
+
   it("Given a topic search, Then paper cards show title, authors, pin, Open, and tags without abstracts", async () => {
     const { findByRole, findAllByPlaceholderText, getAllByRole, getByRole, getByPlaceholderText, queryByText, queryByRole } =
       renderApp("/results?q=Deep%20Learning");

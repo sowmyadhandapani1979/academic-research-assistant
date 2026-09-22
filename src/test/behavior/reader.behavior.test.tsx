@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { mockApi } from "../handlers";
 import { renderApp } from "../renderApp";
 
 describe("UX: Visual reader", () => {
@@ -20,6 +21,50 @@ describe("UX: Visual reader", () => {
       "href",
       "https://arxiv.org/abs/1706.03762",
     );
+  });
+
+  it("Given a paper with no open-access PDF, Then Read shows the abstract and that full text is unavailable", async () => {
+    mockApi.catalog.push({
+      id: "no-oa-pdf",
+      title: "Identification and Sense-making in Organizations",
+      authorsShort: "Afshari",
+      authorsFull: "Afshari, L.",
+      year: 2019,
+      abstract:
+        "The purpose of this paper is to explore the role of sensemaking and identification in the development of employees’ commitment to an organization.",
+      sections: [
+        {
+          heading: "1. Overview",
+          paragraphs: [
+            "The purpose of this paper is to explore the role of sensemaking and identification in the development of employees’ commitment to an organization.",
+          ],
+        },
+      ],
+      related: [],
+      summary: "See abstract for key claims.",
+      takeaways: "See abstract for key claims.",
+      readTime: "5 min",
+      url: "https://www.semanticscholar.org/paper/no-oa-pdf",
+    });
+    const { findByText, queryByRole } = renderApp("/read/no-oa-pdf");
+    expect(
+      await findByText(/no open-access pdf is available for this paper/i),
+    ).toBeInTheDocument();
+    expect(
+      await findByText(/sensemaking and identification in the development/i),
+    ).toBeInTheDocument();
+    expect(queryByRole("link", { name: /download pdf/i })).not.toBeInTheDocument();
+  });
+
+  it("Given a paper with a PDF, Then Read shows the extracted PDF body", async () => {
+    const { findByText, queryByTitle } = renderApp("/read/gpt2");
+    expect(
+      await findByText(/zero-shot setting, without task-specific training data/i),
+    ).toBeInTheDocument();
+    expect(
+      await findByText(/reading naturally occurring demonstrations in the training set/i),
+    ).toBeInTheDocument();
+    expect(queryByTitle("Paper PDF")).not.toBeInTheDocument();
   });
 
   it("When the user saves a typed note, Then it appears in the sidebar", async () => {

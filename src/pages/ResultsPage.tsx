@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { api, ApiError } from "../api/client";
 import { cleanPaper } from "../lib/plainText";
 import { useLibrary } from "../store/LibraryContext";
-import { paperSourceUrl } from "../lib/source";
+import { paperHasFullText, paperSourceUrl } from "../lib/source";
 import {
   SEARCH_YEAR_MAX,
   SEARCH_YEAR_MIN,
@@ -183,6 +183,7 @@ function ResultItem({
       readHref={`/read/${paper.id}`}
       sourceHref={paperSourceUrl(paper)}
       chipTone={(t) => paper.tagsPalette?.[t] ?? "blue"}
+      hasFullText={paperHasFullText(paper)}
     />
   );
 }

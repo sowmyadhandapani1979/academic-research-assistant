@@ -12,6 +12,9 @@ export type Paper = {
   takeaways: string;
   readTime: string;
   url?: string;
+  pdfUrl?: string;
+  doi?: string;
+  pdfIngested?: boolean;
   source?: string;
   fieldsOfStudy?: string[];
 };

@@ -23,6 +23,14 @@ export function StatusBadge({ status }: { status: ReadingStatus }) {
   return <span className={cx(ui.badge, tone)}>{READING_STATUS_LABEL[status]}</span>;
 }
 
+export function ContentBadge({ hasFullText }: { hasFullText: boolean }) {
+  return (
+    <span className={cx(ui.badge, hasFullText ? ui.badgeFullText : ui.badgeAbstract)}>
+      {hasFullText ? "Full text" : "Abstract only"}
+    </span>
+  );
+}
+
 export function MarkButton({
   flagged,
   onClick,

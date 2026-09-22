@@ -93,4 +93,15 @@ describe("UX: Listen voice partner", () => {
       (await findAllByRole("button", { name: /^play$/i })).length,
     ).toBeGreaterThan(0);
   });
+
+  it("Given Listen on a paper with a PDF, Then the same PDF body is on screen to hear", async () => {
+    const { findAllByRole, findByText } = renderApp("/read/gpt2?listen=1");
+    await findAllByRole("button", { name: /^pause$/i });
+    expect(
+      await findByText(/zero-shot setting, without task-specific training data/i),
+    ).toBeInTheDocument();
+    expect(
+      await findByText(/reading naturally occurring demonstrations in the training set/i),
+    ).toBeInTheDocument();
+  });
 });

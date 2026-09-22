@@ -16,6 +16,8 @@ export function IconAction({
   icon,
   label,
   to,
+  href,
+  download,
   onClick,
   type = "button",
   tone = "neutral",
@@ -25,6 +27,8 @@ export function IconAction({
   icon: React.ReactNode;
   label: string;
   to?: string;
+  href?: string;
+  download?: boolean | string;
   onClick?: () => void;
   type?: "button" | "submit";
   tone?: IconTone;
@@ -40,6 +44,22 @@ export function IconAction({
       <span className={ui.iconBtnTip}>{label}</span>
     </>
   );
+  if (href) {
+    return (
+      <a
+        href={href}
+        aria-label={label}
+        title={label}
+        className={classes}
+        onClick={onClick}
+        download={download === true ? "" : download}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {inner}
+      </a>
+    );
+  }
   if (to) {
     return (
       <Link to={to} aria-label={label} title={label} className={classes} onClick={onClick}>

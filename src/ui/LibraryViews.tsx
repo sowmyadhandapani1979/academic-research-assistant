@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { ChipTone } from "./chips";
-import { StatusBadge, TagChip } from "./chips";
+import { ContentBadge, StatusBadge, TagChip } from "./chips";
 import { IconAction, SelectField, TextField, SourceLink } from "./controls";
 import type { ReadingStatus } from "../lib/readingStatus";
 import { cx, ui } from "../theme/classes";
@@ -97,6 +97,7 @@ export function LibraryItem({
   notesHref,
   sourceHref,
   onRemove,
+  hasFullText,
 }: {
   title: string;
   meta: string;
@@ -108,6 +109,7 @@ export function LibraryItem({
   notesHref: string;
   sourceHref?: string;
   onRemove: () => void;
+  hasFullText: boolean;
 }) {
   return (
     <article
@@ -118,6 +120,7 @@ export function LibraryItem({
           <h3 className={ui.rowTitle}>
             <SourceLink href={sourceHref}>{title}</SourceLink>
           </h3>
+          <ContentBadge hasFullText={hasFullText} />
           <StatusBadge status={readingStatus} />
         </div>
         <p className={ui.cardMeta}>{meta}</p>

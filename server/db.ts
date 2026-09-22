@@ -29,6 +29,8 @@ CREATE TABLE IF NOT EXISTS papers (
   year INTEGER,
   abstract TEXT,
   url TEXT,
+  pdf_url TEXT,
+  pdf_ingested INTEGER,
   source TEXT,
   tldr TEXT,
   sections_json TEXT,
@@ -78,6 +80,8 @@ type PaperRow = {
   year: number;
   abstract: string;
   url: string | null;
+  pdf_url?: string | null;
+  pdf_ingested?: number | null;
   source: string | null;
   tldr: string | null;
   sections_json: string;
@@ -126,6 +130,8 @@ export function rowToPaper(row: PaperRow): Paper {
     tagsPalette,
     readTime: row.read_time,
     url: row.url ?? paperById(row.id)?.url,
+    pdfUrl: row.pdf_url ?? paperById(row.id)?.pdfUrl,
+    pdfIngested: Boolean(row.pdf_ingested) || Boolean(paperById(row.id)?.pdfIngested),
     source: row.source ?? undefined,
     fieldsOfStudy: paperById(row.id)?.fieldsOfStudy,
   });
@@ -134,10 +140,10 @@ export function rowToPaper(row: PaperRow): Paper {
 export function upsertPaper(db: AppDb, paper: Paper) {
   db.prepare(
     `INSERT INTO papers (
-      id, title, authors_short, authors_full, year, abstract, url, source, tldr,
+      id, title, authors_short, authors_full, year, abstract, url, pdf_url, pdf_ingested, source, tldr,
       sections_json, related_json, summary, takeaways, tags_palette_json, read_time, fetched_at
     ) VALUES (
-      ?, ?, ?, ?, ?, ?, ?, ?, ?,
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
       ?, ?, ?, ?, ?, ?, ?
     )
     ON CONFLICT(id) DO UPDATE SET
@@ -147,6 +153,8 @@ export function upsertPaper(db: AppDb, paper: Paper) {
       year=excluded.year,
       abstract=excluded.abstract,
       url=excluded.url,
+      pdf_url=excluded.pdf_url,
+      pdf_ingested=excluded.pdf_ingested,
       source=excluded.source,
       sections_json=excluded.sections_json,
       related_json=excluded.related_json,
@@ -163,6 +171,8 @@ export function upsertPaper(db: AppDb, paper: Paper) {
     paper.year,
     paper.abstract,
     paper.url ?? null,
+    paper.pdfUrl ?? null,
+    paper.pdfIngested ? 1 : 0,
     paper.source ?? "Semantic Scholar",
     paper.takeaways,
     JSON.stringify(paper.sections),
@@ -239,8 +249,30 @@ export function createDb(path: string, opts?: { wal?: boolean }) {
   db.exec(`PRAGMA journal_mode = ${opts?.wal === false ? "DELETE" : "WAL"}`);
   db.exec(SCHEMA);
   migrateMarked(db);
+  migratePapers(db);
   seedIfEmpty(db);
   return db;
+}
+
+function schemaVersion(db: AppDb): number {
+  const row = db.prepare("PRAGMA user_version").get() as
+    | { user_version?: number }
+    | undefined;
+  return Number(row?.user_version ?? 0);
+}
+
+function migratePapers(db: AppDb) {
+  const cols = db.prepare("PRAGMA table_info(papers)").all() as { name: string }[];
+  if (!cols.some((c) => c.name === "pdf_url")) {
+    db.exec("ALTER TABLE papers ADD COLUMN pdf_url TEXT");
+  }
+  if (!cols.some((c) => c.name === "pdf_ingested")) {
+    db.exec("ALTER TABLE papers ADD COLUMN pdf_ingested INTEGER");
+  }
+  if (schemaVersion(db) < 2) {
+    db.exec("DELETE FROM search_cache");
+    db.exec("PRAGMA user_version = 2");
+  }
 }
 
 function migrateMarked(db: AppDb) {

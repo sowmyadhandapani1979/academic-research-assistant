@@ -6,7 +6,7 @@ import {
   LibraryToolbar,
   StatusText,
 } from "../ui/LibraryViews";
-import { paperSourceUrl } from "../lib/source";
+import { paperHasFullText, paperSourceUrl } from "../lib/source";
 import { TextLink } from "../ui/controls";
 import { normalizeReadingStatus, readingStatusRank } from "../lib/readingStatus";
 import type { ReadingStatus } from "../types";
@@ -93,6 +93,7 @@ export function LibraryPage() {
             listenHref={`/read/${paper.id}?listen=1`}
             notesHref={`/notes/${paper.id}`}
             sourceHref={paperSourceUrl(paper)}
+            hasFullText={paperHasFullText(paper)}
             onRemove={() => removePaper(paper.id)}
           />
         );
