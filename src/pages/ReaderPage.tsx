@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { api } from "../api/client";
-import { useLibrary, usePaper } from "../store/LibraryContext";
+import { useLibrary } from "../store/LibraryContext";
 import {
   ArticleBody,
   ListenBar,
@@ -17,8 +17,8 @@ export function ReaderPage() {
   const { id = "" } = useParams();
   const [params, setParams] = useSearchParams();
   const listen = params.get("listen") === "1";
-  const paper = usePaper(id);
   const lib = useLibrary();
+  const paper = lib.papers[id];
   const { startReading, cachePapers } = lib;
   const isRead = Boolean(lib.library.find((e) => e.paperId === id)?.isRead);
   const [draft, setDraft] = useState("");

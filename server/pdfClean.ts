@@ -39,7 +39,7 @@ export function markdownToSections(markdown: string): Paper["sections"] {
   return sections;
 }
 
-export function chunkPdfDump(raw: string): string[] {
+function chunkPdfDump(raw: string): string[] {
   const text = raw.replace(/\s+\n/g, "\n").trim();
   if (!text) return [];
   const parts: string[] = [];
@@ -72,7 +72,7 @@ PDF extract:
 ${chunk}`;
 }
 
-export async function defaultOllamaGenerate(model: string, prompt: string): Promise<string> {
+async function defaultOllamaGenerate(model: string, prompt: string): Promise<string> {
   const res = await fetch(`${OLLAMA_HOST}/api/generate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -91,7 +91,7 @@ export async function defaultOllamaGenerate(model: string, prompt: string): Prom
   return (data.response ?? "").trim();
 }
 
-export async function resolveLocalModel(): Promise<string | null> {
+async function resolveLocalModel(): Promise<string | null> {
   try {
     const res = await fetch(`${OLLAMA_HOST}/api/tags`);
     if (!res.ok) return null;

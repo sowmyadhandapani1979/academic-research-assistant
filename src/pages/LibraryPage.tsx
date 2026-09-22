@@ -4,8 +4,8 @@ import {
   LibraryItem,
   LibraryScreen,
   LibraryToolbar,
-  StatusText,
 } from "../ui/LibraryViews";
+import { StatusText } from "../ui/SearchHero";
 import { paperHasFullText, paperSourceUrl } from "../lib/source";
 import { TextLink } from "../ui/controls";
 import { normalizeReadingStatus, readingStatusRank } from "../lib/readingStatus";
@@ -70,7 +70,7 @@ export function LibraryPage() {
         rows.length === 0 ? (
           <StatusText>
             Nothing marked yet.{" "}
-            <TextLink to="/" variant="empty">
+            <TextLink to="/">
               Search papers
             </TextLink>
           </StatusText>

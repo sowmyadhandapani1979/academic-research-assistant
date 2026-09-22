@@ -47,7 +47,7 @@ function splitParagraphs(block: string): string[] {
   return paras.filter((p) => p.length > 40);
 }
 
-export function textToSections(raw: string): Paper["sections"] {
+function textToSections(raw: string): Paper["sections"] {
   const text = scholarlyPlainText(raw, 400_000);
   if (!text) return [];
   const chunks = text
