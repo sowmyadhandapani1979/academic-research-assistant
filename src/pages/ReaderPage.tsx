@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { useLibrary, usePaper } from "../store/LibraryContext";
+import { api } from "../api/client";
+import { useLibrary } from "../store/LibraryContext";
 import {
   ArticleBody,
   ListenBar,
@@ -8,7 +9,7 @@ import {
   ReaderFrame,
   ReaderHeader,
 } from "../ui/ReaderViews";
-import { paperSourceUrl } from "../lib/source";
+import { paperPdfFilename, paperPdfUrl, paperSourceUrl } from "../lib/source";
 import { ui } from "../theme/classes";
 import { useVoiceSession } from "../voice/useVoiceSession";
 
@@ -16,12 +17,33 @@ export function ReaderPage() {
   const { id = "" } = useParams();
   const [params, setParams] = useSearchParams();
   const listen = params.get("listen") === "1";
-  const paper = usePaper(id);
   const lib = useLibrary();
-  const { startReading } = lib;
+  const paper = lib.papers[id];
+  const { startReading, cachePapers } = lib;
   const isRead = Boolean(lib.library.find((e) => e.paperId === id)?.isRead);
   const [draft, setDraft] = useState("");
   const [command, setCommand] = useState("");
+  const [opening, setOpening] = useState(!paper);
+
+  useEffect(() => {
+    if (!id) return;
+    let cancelled = false;
+    setOpening((open) => open || !paper);
+    void api
+      .getPaper(id)
+      .then((next) => {
+        if (!cancelled) cachePapers([next]);
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        if (!cancelled) setOpening(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // Fetch once per paper id so a slow PDF load does not look like "not found".
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, cachePapers]);
 
   useEffect(() => {
     if (paper) startReading(id);
@@ -46,6 +68,9 @@ export function ReaderPage() {
   });
 
   if (!paper) {
+    if (opening) {
+      return <p className={ui.notFound}>Opening paper…</p>;
+    }
     return (
       <p className={ui.notFound}>
         Paper not found. <Link to="/library">Back to My Papers</Link>
@@ -85,6 +110,8 @@ export function ReaderPage() {
           title={paper.title}
           meta={`${paper.authorsShort} · ${paper.year}`}
           sourceHref={paperSourceUrl(paper)}
+          pdfHref={paperPdfUrl(paper)}
+          pdfDownloadName={paperPdfFilename(paper)}
           summaryHref={`/notes/${paper.id}`}
           listenLabel={listen ? (playing ? "Pause" : "Listen") : "Listen"}
           onListen={listen ? voice.togglePlay : toggleListen}
@@ -128,6 +155,7 @@ export function ReaderPage() {
           abstract={paper.abstract}
           sections={paper.sections}
           activeUnitId={listen ? voice.activeUnitId : null}
+          hasPdf={Boolean(paperPdfUrl(paper))}
         />
       }
       notes={

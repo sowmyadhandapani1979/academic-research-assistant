@@ -4,7 +4,7 @@ import { HttpError } from "./types.js";
 
 const S2 = "https://api.semanticscholar.org/graph/v1";
 const FIELDS =
-  "paperId,title,authors,year,abstract,url,venue,tldr,openAccessPdf,fieldsOfStudy";
+  "paperId,title,authors,year,abstract,url,venue,tldr,openAccessPdf,externalIds,fieldsOfStudy";
 const MIN_INTERVAL_MS = 1100;
 const UNAUTH_INTERVAL_MS = 2500;
 const RATE_LIMIT_COOLDOWN_MS = 20_000;
@@ -42,6 +42,8 @@ type S2Paper = {
   url?: string;
   venue?: string;
   tldr?: { text?: string } | null;
+  openAccessPdf?: { url?: string } | null;
+  externalIds?: { ArXiv?: string; DOI?: string; PubMedCentral?: string };
   fieldsOfStudy?: string[];
 };
 
@@ -97,6 +99,16 @@ async function s2Get(url: string, attempt = 0): Promise<unknown> {
   return res.json();
 }
 
+function s2PdfUrl(raw: S2Paper): string | undefined {
+  const direct = raw.openAccessPdf?.url?.trim();
+  if (direct && /^https?:\/\//i.test(direct)) return direct;
+  const arxiv = raw.externalIds?.ArXiv?.trim();
+  if (arxiv) return `https://arxiv.org/pdf/${arxiv}`;
+  const pmc = raw.externalIds?.PubMedCentral?.trim();
+  if (pmc) return `https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${pmc.replace(/^PMC/i, "")}/pdf/`;
+  return undefined;
+}
+
 export function mapS2Paper(raw: S2Paper): Paper | null {
   const id = raw.paperId;
   if (!id || !raw.title) return null;
@@ -105,7 +117,7 @@ export function mapS2Paper(raw: S2Paper): Paper | null {
     names.length <= 1 ? names[0] ?? "Unknown" : `${names[0]} et al.`;
   const authorsFull = names.length ? names.join(", ") : "Unknown";
   const abstract =
-    scholarlyPlainText(raw.abstract ?? "", 1200) || "No abstract available.";
+    scholarlyPlainText(raw.abstract ?? "", 12_000) || "No abstract available.";
   const tldr = scholarlyPlainText(raw.tldr?.text ?? "", 400);
   const year = raw.year ?? 0;
   const title = scholarlyPlainText(raw.title, 240);
@@ -130,6 +142,8 @@ export function mapS2Paper(raw: S2Paper): Paper | null {
     takeaways: tldr || "See abstract for key claims.",
     readTime: `${Math.max(5, Math.round(abstract.split(/\s+/).length / 200) + 4)} min`,
     url: raw.url || `https://www.semanticscholar.org/paper/${id}`,
+    pdfUrl: s2PdfUrl(raw),
+    doi: raw.externalIds?.DOI?.trim() || undefined,
     source: raw.venue || "Semantic Scholar",
     fieldsOfStudy: raw.fieldsOfStudy,
   };

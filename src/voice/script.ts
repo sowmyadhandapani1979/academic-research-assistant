@@ -7,13 +7,15 @@ export function paperToUnits(paper: Paper): SpeechUnit[] {
       kind: "title",
       text: `${paper.title}, by ${paper.authorsShort}, ${paper.year}.`,
     },
-    {
+  ];
+  if (!paper.pdfIngested) {
+    units.push({
       id: "abstract",
       kind: "abstract",
       heading: "Abstract",
       text: `Abstract. ${paper.abstract}`,
-    },
-  ];
+    });
+  }
   paper.sections.forEach((section, si) => {
     units.push({
       id: `h-${si}`,

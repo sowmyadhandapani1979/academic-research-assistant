@@ -30,7 +30,7 @@ export function cleanPaper(paper: Paper): Paper {
   return {
     ...paper,
     title: scholarlyPlainText(paper.title, 240),
-    abstract: scholarlyPlainText(paper.abstract, 1200),
+    abstract: scholarlyPlainText(paper.abstract, 12_000),
     summary: scholarlyPlainText(paper.summary, 800),
     takeaways: scholarlyPlainText(paper.takeaways, 400),
     sections: paper.sections.map((section) => ({

@@ -16,6 +16,8 @@ export function IconAction({
   icon,
   label,
   to,
+  href,
+  download,
   onClick,
   type = "button",
   tone = "neutral",
@@ -25,6 +27,8 @@ export function IconAction({
   icon: React.ReactNode;
   label: string;
   to?: string;
+  href?: string;
+  download?: boolean | string;
   onClick?: () => void;
   type?: "button" | "submit";
   tone?: IconTone;
@@ -40,6 +44,22 @@ export function IconAction({
       <span className={ui.iconBtnTip}>{label}</span>
     </>
   );
+  if (href) {
+    return (
+      <a
+        href={href}
+        aria-label={label}
+        title={label}
+        className={classes}
+        onClick={onClick}
+        download={download === true ? "" : download}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {inner}
+      </a>
+    );
+  }
   if (to) {
     return (
       <Link to={to} aria-label={label} title={label} className={classes} onClick={onClick}>
@@ -62,82 +82,28 @@ export function IconAction({
 }
 
 export function Button({
-  variant = "ghost",
+  variant = "chip",
   className,
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
-      variant?:
-    | "primary"
-    | "ios"
-    | "iosInline"
-    | "play"
-    | "mic"
-    | "chip"
-    | "chipMobile"
-    | "ghost"
-    | "ghostSm"
-    | "summary"
-    | "success"
-    | "successSm"
-    | "fullPrimary"
-    | "fullIos"
-    | "fullGhost"
-    | "fullIosSm"
-    | "fullGhostSm";
+  variant?: "chip" | "chipMobile";
 }) {
   const map = {
-    primary: ui.btnPrimary,
-    ios: ui.btnIos,
-    iosInline: ui.btnIosInline,
-    play: ui.btnPlay,
-    mic: ui.btnMic,
     chip: ui.btnChip,
     chipMobile: ui.btnChipMobile,
-    ghost: ui.btnGhost,
-    ghostSm: ui.btnGhostSm,
-    summary: ui.btnSummary,
-    success: ui.btnSuccess,
-    successSm: ui.btnSuccessSm,
-    fullPrimary: ui.btnFullPrimary,
-    fullIos: ui.btnFullIos,
-    fullGhost: ui.btnFullGhost,
-    fullIosSm: ui.btnFullIosSm,
-    fullGhostSm: ui.btnFullGhostSm,
   };
   return <button type="button" className={cx(map[variant], className)} {...props} />;
 }
 
 export function TextLink({
   to,
-  variant,
   children,
 }: {
   to: string;
-  variant:
-    | "back"
-    | "backSm"
-    | "summary"
-    | "summarySm"
-    | "read"
-    | "listen"
-    | "notes"
-    | "mobileRead"
-    | "empty";
   children: React.ReactNode;
 }) {
-  const map = {
-    back: ui.btnBack,
-    backSm: ui.btnBackSm,
-    summary: ui.btnSummary,
-    summarySm: ui.btnSummarySm,
-    read: ui.btnReadLink,
-    listen: ui.btnListenLink,
-    notes: ui.btnNotesLink,
-    mobileRead: ui.btnMobileRead,
-    empty: ui.emptyLink,
-  };
   return (
-    <Link to={to} className={map[variant]}>
+    <Link to={to} className={ui.emptyLink}>
       {children}
     </Link>
   );

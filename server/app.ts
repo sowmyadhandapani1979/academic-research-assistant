@@ -20,7 +20,7 @@ import {
 } from "./db.js";
 import type { S2Client } from "./s2.js";
 import { s2IsQuiet, s2NoteRateLimit, s2ResetQuiet } from "./s2.js";
-import { searchOpenAlex } from "./openalex.js";
+import * as openalex from "./openalex.js";
 import { HttpError } from "./types.js";
 import type { Paper } from "../src/types.js";
 import {
@@ -31,6 +31,8 @@ import {
   searchCacheKey,
   yearParam,
 } from "../src/lib/searchFilters.js";
+import { paperPdfFilename, paperPdfUrl } from "../src/lib/source.js";
+import { fetchPdfBytes, ingestPaperPdf } from "./pdf.js";
 
 const RATE_LIMIT_WARNING =
   "No matching papers on this device, and live search is cooling down. Try again in a minute.";
@@ -58,7 +60,7 @@ async function recoverLimitedSearch(
   }
   if (process.env.S2_API_KEY?.trim()) {
     try {
-      const fallback = await searchOpenAlex(query, limit, filters);
+      const fallback = await openalex.searchOpenAlex(query, limit, filters);
       if (fallback.papers.length) {
         for (const paper of fallback.papers) upsertPaper(db, paper);
         setCachedSearch(db, cacheKey, fallback.papers, fallback.total);
@@ -69,6 +71,48 @@ async function recoverLimitedSearch(
     }
   }
   return searchPayload(local, { warning: RATE_LIMIT_WARNING });
+}
+
+async function resolvePaper(
+  db: AppDb,
+  s2: S2Client,
+  id: string,
+): Promise<Paper | null> {
+  const local = getPaper(db, id);
+  if (local && paperPdfUrl(local)) return local;
+  let paper = local ?? null;
+  try {
+    const remote = await s2.get(id);
+    if (remote) {
+      const pdfUrl = paperPdfUrl(remote) || paperPdfUrl(local ?? {});
+      paper = {
+        ...(local ?? remote),
+        ...remote,
+        url: remote.url || local?.url,
+        pdfUrl,
+        doi: remote.doi || local?.doi,
+        pdfIngested: Boolean(local?.pdfIngested && paperPdfUrl(local) === pdfUrl),
+        sections:
+          local?.pdfIngested && (local.sections?.length ?? 0) > (remote.sections?.length ?? 0)
+            ? local.sections
+            : remote.sections,
+      };
+      upsertPaper(db, paper);
+    }
+  } catch (err) {
+    if (!paper) {
+      if (err instanceof HttpError && err.status === 404) return null;
+      throw err;
+    }
+  }
+  if (paper && !paperPdfUrl(paper)) {
+    const pdfUrl = await openalex.findOpenAccessPdf(paper);
+    if (pdfUrl) {
+      paper = { ...paper, pdfUrl, pdfIngested: false };
+      upsertPaper(db, paper);
+    }
+  }
+  return paper;
 }
 
 export function createApp(db: AppDb, s2: S2Client) {
@@ -142,29 +186,55 @@ export function createApp(db: AppDb, s2: S2Client) {
     }
   });
 
-  app.get("/api/papers/:id", async (req, res) => {
-    const id = req.params.id;
-    const local = getPaper(db, id);
-    if (local) {
-      res.json(local);
-      return;
-    }
+  app.get("/api/papers/:id/pdf", async (req, res) => {
     try {
-      const paper = await s2.get(id);
+      const paper = await resolvePaper(db, s2, req.params.id);
       if (!paper) {
         res.status(404).json({ error: "Paper not found", code: "not_found" });
         return;
       }
-      upsertPaper(db, paper);
-      res.json(paper);
+      const url = paperPdfUrl(paper);
+      if (!url) {
+        res.status(404).json({ error: "No PDF for this paper", code: "not_found" });
+        return;
+      }
+      const bytes = await fetchPdfBytes(url);
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `inline; filename="${paperPdfFilename(paper)}"`,
+      );
+      res.send(Buffer.from(bytes));
     } catch (err) {
       if (err instanceof HttpError && err.status === 429) {
         res.status(429).json({ error: err.message, code: err.code });
         return;
       }
       res.status(502).json({
-        error: err instanceof Error ? err.message : "Upstream error",
+        error: err instanceof Error ? err.message : "Could not load PDF",
         code: "upstream",
+      });
+    }
+  });
+
+  app.get("/api/papers/:id", async (req, res) => {
+    try {
+      const paper = await resolvePaper(db, s2, req.params.id);
+      if (!paper) {
+        res.status(404).json({ error: "Paper not found", code: "not_found" });
+        return;
+      }
+      const hydrated = await ingestPaperPdf(paper);
+      upsertPaper(db, hydrated);
+      res.json(hydrated);
+    } catch (err) {
+      if (err instanceof HttpError && err.status === 429) {
+        res.status(429).json({ error: err.message, code: err.code });
+        return;
+      }
+      res.status(err instanceof HttpError ? err.status : 502).json({
+        error: err instanceof Error ? err.message : "Could not load paper",
+        code: err instanceof HttpError ? err.code : "upstream",
       });
     }
   });

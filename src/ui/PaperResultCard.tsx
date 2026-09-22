@@ -1,6 +1,5 @@
 import type { FormEvent } from "react";
-import type { ChipTone } from "./chips";
-import { MarkButton, TagChip } from "./chips";
+import { ContentBadge, MarkButton, TagChip, type ChipTone } from "./chips";
 import { IconAction, TextField, SourceLink } from "./controls";
 import { scholarlyPlainText } from "../lib/plainText";
 import { ui } from "../theme/classes";
@@ -55,6 +54,7 @@ export function PaperResultCard({
   expanded,
   onToggleExpand,
   abstractId,
+  hasFullText,
 }: {
   title: string;
   meta: string;
@@ -71,6 +71,7 @@ export function PaperResultCard({
   expanded: boolean;
   onToggleExpand: () => void;
   abstractId: string;
+  hasFullText: boolean;
 }) {
   return (
     <article className={ui.card}>
@@ -95,7 +96,10 @@ export function PaperResultCard({
               {scholarlyPlainText(title, 240)}
             </SourceLink>
           </h3>
-          <p className={ui.cardMeta}>{meta}</p>
+          <div className={ui.cardMetaRow}>
+            <p className={ui.cardMeta}>{meta}</p>
+            <ContentBadge hasFullText={hasFullText} />
+          </div>
         </div>
         <div className="flex gap-2 shrink-0">
           <MarkButton flagged={flagged} onClick={onToggleFlag} />

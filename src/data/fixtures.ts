@@ -55,6 +55,8 @@ export const papers: Paper[] = [
       "Self-attention > RNNs for parallelization; Multi-head attention for semantic richness; Foundation for BERT, GPT, and modern transformers",
     readTime: "12 min",
     url: "https://arxiv.org/abs/1706.03762",
+    pdfUrl: "https://arxiv.org/pdf/1706.03762",
+    pdfIngested: true,
     source: "arXiv",
   },
   {
@@ -85,6 +87,8 @@ export const papers: Paper[] = [
       "Bidirectional context; masked LM; one extra layer for fine-tuning",
     readTime: "10 min",
     url: "https://arxiv.org/abs/1810.04805",
+    pdfUrl: "https://arxiv.org/pdf/1810.04805",
+    pdfIngested: true,
     source: "arXiv",
   },
   {
@@ -101,6 +105,7 @@ export const papers: Paper[] = [
         heading: "1. Introduction",
         paragraphs: [
           "When trained on a large enough dataset, GPT-2 shows that language models can perform a wide range of tasks in a zero-shot setting, without task-specific training data.",
+          "The model is trained on WebText and learns to perform tasks by reading naturally occurring demonstrations in the training set, rather than by using supervised datasets.",
         ],
       },
     ],
@@ -114,6 +119,8 @@ export const papers: Paper[] = [
     takeaways: "Scale + data; zero-shot transfer; decoder-only transformers",
     readTime: "9 min",
     url: "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf",
+    pdfUrl: "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf",
+    pdfIngested: true,
     source: "OpenAI",
   },
 ];

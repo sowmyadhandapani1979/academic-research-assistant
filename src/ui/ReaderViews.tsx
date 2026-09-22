@@ -9,6 +9,8 @@ export function ReaderHeader({
   title,
   meta,
   sourceHref,
+  pdfHref,
+  pdfDownloadName,
   summaryHref,
   listenLabel,
   onListen,
@@ -19,6 +21,8 @@ export function ReaderHeader({
   title: string;
   meta: string;
   sourceHref?: string;
+  pdfHref?: string;
+  pdfDownloadName?: string;
   summaryHref: string;
   listenLabel: string;
   onListen: () => void;
@@ -27,6 +31,15 @@ export function ReaderHeader({
 }) {
   const actions = (
     <>
+      {pdfHref ? (
+        <IconAction
+          href={pdfHref}
+          download={pdfDownloadName ?? true}
+          icon="📄"
+          label="Download PDF"
+          tone="primary"
+        />
+      ) : null}
       <IconAction to={summaryHref} icon="📋" label="Summary" tone="summary" />
       <IconAction
         icon={listenLabel === "Pause" ? "⏸" : "🎧"}
@@ -185,28 +198,39 @@ export function ArticleBody({
   abstract,
   sections,
   activeUnitId,
+  hasPdf,
 }: {
   title: string;
   authors: string;
   abstract: string;
   sections: { heading: string; paragraphs: string[] }[];
   activeUnitId?: string | null;
+  hasPdf?: boolean;
 }) {
+  const bodySections = hasPdf
+    ? sections
+    : sections.filter((s) => s.paragraphs.join(" ").trim() !== abstract.trim());
   return (
     <article className={ui.article}>
       <div className={ui.articleInner}>
         <h2 className={ui.articleTitle}>{title}</h2>
         <p className={ui.articleAuthors}>{authors}</p>
+        {!hasPdf ? (
+          <p className={ui.articleNotice}>
+            No open-access PDF is available for this paper. The publisher page may have the full
+            text.
+          </p>
+        ) : null}
         <h3 className={ui.articleH}>Abstract</h3>
         <p className={activeUnitId === "abstract" ? ui.articlePActive : ui.articleP}>
           {abstract}
         </p>
-        {sections.map((s, si) => (
-          <section key={s.heading}>
+        {bodySections.map((s, si) => (
+          <section key={`${s.heading}-${si}`}>
             <h3 className={ui.articleH}>{s.heading}</h3>
             {s.paragraphs.map((p, pi) => (
               <p
-                key={p.slice(0, 24)}
+                key={`${si}-${pi}-${p.slice(0, 24)}`}
                 className={
                   activeUnitId === `p-${si}-${pi}` ? ui.articlePActive : ui.articleP
                 }

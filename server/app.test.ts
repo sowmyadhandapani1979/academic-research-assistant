@@ -2,10 +2,11 @@
 import request from "supertest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createApp } from "./app.js";
-import { createDb } from "./db.js";
+import { createDb, upsertPaper } from "./db.js";
 import { HttpError } from "./types.js";
 import type { S2Client } from "./s2.js";
 import { s2ResetQuiet } from "./s2.js";
+import * as openalex from "./openalex.js";
 import type { Paper } from "../src/types.js";
 
 const sample: Paper = {
@@ -20,6 +21,9 @@ const sample: Paper = {
   summary: "Transformers queue work.",
   takeaways: "Queue then attend.",
   readTime: "6 min",
+  url: "https://www.semanticscholar.org/paper/s2-1",
+  pdfUrl: "https://example.com/queued.pdf",
+  pdfIngested: true,
 };
 
 function fakeS2(overrides: Partial<S2Client> = {}): S2Client {
@@ -43,6 +47,7 @@ describe("API routes", () => {
     const second = await request(app).get("/api/papers/search").query({ query: "transformers" });
     expect(second.status).toBe(200);
     expect(s2.search).toHaveBeenCalledTimes(1);
+    expect(second.body.papers[0].pdfUrl).toBe("https://example.com/queued.pdf");
   });
 
   it("passes discipline and year into the Semantic Scholar search query", async () => {
@@ -145,5 +150,57 @@ describe("API routes", () => {
     expect(
       list.body.markedPapers.every((p: { paperId: string }) => p.paperId !== "attention"),
     ).toBe(true);
+  });
+
+  it("loads an open-access PDF url when opening a cached paper that was missing one", async () => {
+    const db = createDb(":memory:");
+    upsertPaper(db, {
+      ...sample,
+      id: "cached-oa",
+      pdfUrl: undefined,
+      pdfIngested: true,
+    });
+    const remote = {
+      ...sample,
+      id: "cached-oa",
+      pdfUrl: "https://example.com/queued.pdf",
+      pdfIngested: true,
+    };
+    const s2 = fakeS2({
+      get: vi.fn(async (id: string) => (id === remote.id ? remote : null)),
+    });
+    const app = createApp(db, s2);
+    const res = await request(app).get("/api/papers/cached-oa");
+    expect(res.status).toBe(200);
+    expect(res.body.pdfUrl).toBe("https://example.com/queued.pdf");
+    expect(s2.get).toHaveBeenCalled();
+  });
+
+  it("fills a missing PDF url from OpenAlex when Semantic Scholar has none", async () => {
+    const spy = vi
+      .spyOn(openalex, "findOpenAccessPdf")
+      .mockResolvedValue("https://example.com/oa.pdf");
+    const db = createDb(":memory:");
+    upsertPaper(db, {
+      ...sample,
+      id: "no-pdf",
+      pdfUrl: undefined,
+      pdfIngested: false,
+    });
+    const remote = {
+      ...sample,
+      id: "no-pdf",
+      pdfUrl: undefined,
+      pdfIngested: false,
+    };
+    const s2 = fakeS2({
+      get: vi.fn(async (id: string) => (id === remote.id ? remote : null)),
+    });
+    const app = createApp(db, s2);
+    const res = await request(app).get("/api/papers/no-pdf");
+    expect(res.status).toBe(200);
+    expect(res.body.pdfUrl).toBe("https://example.com/oa.pdf");
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
   });
 });

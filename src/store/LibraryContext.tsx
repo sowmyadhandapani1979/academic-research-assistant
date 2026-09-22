@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { api } from "../api/client";
-import { papers as seedPapers } from "../data/fixtures";
+import { papers as seedPapers, DEFAULT_RECENTS } from "../data/fixtures";
 import { cleanPaper } from "../lib/plainText";
 import type { LibraryEntry, Note, NoteKind, NoteSource, Paper } from "../types";
 import {
@@ -23,7 +23,6 @@ type LibraryContextValue = {
   library: LibraryEntry[];
   notes: Note[];
   isFlagged: (paperId: string) => boolean;
-  isInLibrary: (paperId: string) => boolean;
   toggleFlag: (paperId: string) => void;
   addTag: (paperId: string, tag: string) => void;
   tagsFor: (paperId: string) => string[];
@@ -118,11 +117,7 @@ const initialNotes: Note[] = [
 const initialPapers = Object.fromEntries(seedPapers.map((p) => [p.id, p]));
 
 export function LibraryProvider({ children }: { children: ReactNode }) {
-  const [recents, setRecents] = useState([
-    "Deep Learning",
-    "Renewable Energy",
-    "Immunotherapy",
-  ]);
+  const [recents, setRecents] = useState([...DEFAULT_RECENTS]);
   const [library, setLibrary] = useState<LibraryEntry[]>(initialLibrary);
   const [notes, setNotes] = useState<Note[]>(initialNotes);
   const [papers, setPapers] = useState<Record<string, Paper>>(initialPapers);
@@ -194,11 +189,6 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
       }
     })();
   }, []);
-
-  const isInLibrary = useCallback(
-    (paperId: string) => library.some((e) => e.paperId === paperId),
-    [library],
-  );
 
   const isFlagged = useCallback(
     (paperId: string) => library.some((e) => e.paperId === paperId && e.flagged),
@@ -406,7 +396,6 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
       library,
       notes,
       isFlagged,
-      isInLibrary,
       toggleFlag,
       addTag,
       tagsFor,
@@ -428,7 +417,6 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
       library,
       notes,
       isFlagged,
-      isInLibrary,
       toggleFlag,
       addTag,
       tagsFor,
@@ -456,15 +444,10 @@ export function useLibrary() {
   return ctx;
 }
 
-export function usePaperEntry(paperId: string) {
-  const { library } = useLibrary();
-  return library.find((e) => e.paperId === paperId);
-}
-
 export function usePaper(id: string) {
   const { papers, ensurePaper } = useLibrary();
   useEffect(() => {
-    if (id && !papers[id]) ensurePaper(id);
-  }, [id, papers, ensurePaper]);
+    if (id) ensurePaper(id);
+  }, [id, ensurePaper]);
   return papers[id];
 }

@@ -44,7 +44,7 @@ export const ui = {
   recentsDesktop: "hidden md:flex flex-wrap gap-2",
   recentsMobile: "md:hidden flex flex-col gap-2",
 
-  shell: "relative min-h-screen flex flex-col bg-[linear-gradient(135deg,var(--color-hero-from)_0%,var(--color-hero-to)_100%)]",
+  shell: "relative h-screen min-h-0 flex flex-col bg-[linear-gradient(135deg,var(--color-hero-from)_0%,var(--color-hero-to)_100%)]",
   themeGroup: "ml-auto flex items-center rounded-full bg-gray-btn p-0.5 w-fit",
   themeOption:
     "group relative inline-flex items-center justify-center w-8 h-8 rounded-full border-0 bg-transparent text-muted cursor-pointer",
@@ -83,72 +83,24 @@ export const ui = {
   iconBtnSuccess: "bg-read-ok text-white",
   iconBtnSummary: "bg-gray-btn text-summary",
   iconBtnDanger: "bg-gray-btn text-flag",
-  iconBtnActive: "ring-2 ring-accent",
   iconBtnGlyph: "text-[22px] leading-none",
   iconBtnTip:
     "pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+6px)] z-30 whitespace-nowrap rounded-md bg-ink text-on-ink text-[11px] font-medium px-2 py-1 opacity-0 shadow-sm group-hover:opacity-100 group-focus-visible:opacity-100",
-  btnPrimary:
-    "hidden md:inline-flex px-8 py-4 bg-accent text-white border-0 rounded-full text-base font-semibold cursor-pointer hover:bg-accent-hover",
-  btnIos:
-    "md:hidden w-full py-3.5 bg-ios text-white border-0 rounded-full text-[15px] font-semibold cursor-pointer",
-  btnIosInline:
-    "hidden md:inline-flex px-6 py-3 bg-ios text-white border-0 rounded-full text-sm font-medium cursor-pointer",
-  btnPlay:
-    "px-4 py-2 bg-ios text-white border-0 rounded-full text-sm font-medium cursor-pointer inline-flex",
-  btnMic:
-    "px-3 py-2 bg-gray-btn text-ios border-0 rounded-full text-xs font-medium cursor-pointer",
   btnChip: "px-3 py-2 bg-surface border border-input-border rounded-full text-sm text-ink cursor-pointer",
   btnChipMobile:
     "px-2.5 py-2.5 bg-surface border-0 rounded-full text-[13px] text-ink cursor-pointer text-left",
-  btnGhost:
-    "px-5 py-3 bg-gray-btn text-ios border-0 rounded-full text-[13px] font-medium cursor-pointer no-underline",
-  btnGhostSm:
-    "px-3.5 py-2.5 bg-gray-btn text-ios border-0 rounded-full text-xs font-medium cursor-pointer no-underline",
-  btnSummary:
-    "px-5 py-3 bg-gray-btn text-summary no-underline rounded-full text-[13px] font-medium",
-  btnSummarySm:
-    "px-3.5 py-2.5 bg-gray-btn text-summary no-underline rounded-full text-xs font-medium",
-  btnSuccess:
-    "px-5 py-3 bg-read-ok text-white border-0 rounded-full text-[13px] font-medium cursor-pointer",
-  btnSuccessSm:
-    "px-3.5 py-2.5 bg-read-ok text-white border-0 rounded-full text-xs font-medium cursor-pointer",
-  btnBack:
-    "px-4 py-2.5 bg-gray-btn rounded-full text-[13px] no-underline text-ios font-medium shrink-0",
-  btnBackSm:
-    "px-3.5 py-2.5 md:px-4 bg-gray-btn rounded-full text-xs md:text-[13px] no-underline text-ios font-medium shrink-0",
-  btnFullPrimary:
-    "w-full mt-2 py-2 bg-accent text-white border-0 rounded-full text-xs font-medium cursor-pointer",
-  btnFullIos:
-    "w-full py-3 bg-ios text-white border-0 rounded-full text-[13px] font-medium cursor-pointer",
-  btnFullGhost:
-    "w-full py-3 bg-gray-btn border-0 rounded-full text-[13px] text-ios font-medium cursor-pointer",
-  btnFullIosSm:
-    "w-full py-2.5 bg-ios text-white border-0 rounded-full text-xs font-medium cursor-pointer",
-  btnFullGhostSm:
-    "w-full py-2.5 bg-gray-btn border-0 rounded-full text-xs text-ios font-medium cursor-pointer",
-  btnReadLink:
-    "flex-1 md:flex-none text-center px-4 md:px-5 py-2.5 md:py-3 bg-ios text-white no-underline rounded-full text-xs md:text-[13px] font-medium",
-  btnListenLink:
-    "flex-1 md:flex-none text-center px-4 md:px-5 py-2.5 md:py-3 bg-gray-btn text-ios no-underline rounded-full text-xs md:text-[13px] font-medium",
-  btnNotesLink:
-    "flex-1 md:flex-none text-center px-4 md:px-5 py-2.5 md:py-3 bg-gray-btn text-summary no-underline rounded-full text-xs md:text-[13px] font-medium",
-  btnMobileRead:
-    "md:hidden block w-full py-2.5 bg-ios text-white text-center no-underline rounded-full text-xs font-medium",
   titleLink:
     "text-inherit no-underline hover:underline hover:text-ios",
-  mark: "w-12 h-12 shrink-0 border-0 rounded-full text-[22px] cursor-pointer flex items-center justify-center",
-  markOn: "bg-flag text-white",
-  markOff: "bg-gray-btn text-muted",
 
   card: "border border-line rounded-xl md:rounded-lg p-4 md:p-6 bg-surface",
   cardHeader: "flex justify-between items-center mb-0 gap-2",
   cardTitle: "m-0 mb-1 md:mb-2 text-sm md:text-base font-semibold text-ink break-words",
   cardMeta: "m-0 text-xs md:text-[13px] text-muted",
+  cardMetaRow: "flex flex-wrap gap-2 items-center",
   cardAbstract: "m-0 mt-3 mb-2.5 md:mb-3 text-xs md:text-[13px] text-body leading-relaxed break-words",
   accordionToggle:
     "group relative inline-flex items-center justify-center w-11 h-11 shrink-0 border-0 rounded-xl cursor-pointer bg-gray-btn text-ios",
   accordionChevron: "text-[28px] leading-none font-semibold",
-  srOnly: "sr-only",
   tagRow: "flex gap-2 items-center flex-wrap mb-2.5 md:mb-0",
   chip: "inline-block px-2.5 py-1 rounded text-[12px] font-medium",
   chipBlue: "bg-chip text-chip-text",
@@ -159,14 +111,14 @@ export const ui = {
   libraryRow:
     "flex flex-col md:flex-row md:items-center p-3.5 md:p-4 rounded-xl md:rounded-md gap-2.5 md:gap-4 border bg-surface border-line",
   libraryRowUnread: "bg-amber-row border-amber-border",
-  flagIcon: "hidden md:inline text-[20px]",
-  flagDim: "opacity-30",
   rowTitleLine: "flex gap-2 items-start md:items-center mb-1 justify-between md:justify-start",
   rowTitle: "m-0 text-sm md:text-[15px] font-semibold text-ink",
   badge: "inline-block px-2 py-0.5 rounded text-[10px] md:text-[11px] font-medium shrink-0",
   badgeRead: "bg-read-bg text-read-text",
   badgeUnread: "bg-unread-bg text-unread-text",
   badgeProgress: "bg-chip-orange text-chip-orange-text",
+  badgeFullText: "bg-read-bg text-read-text",
+  badgeAbstract: "bg-unread-bg text-unread-text",
   rowActions: "flex gap-1.5 md:gap-2 items-center flex-wrap",
   onlyMobile: "md:hidden",
   onlyDesktop: "hidden md:inline",
@@ -176,7 +128,6 @@ export const ui = {
   filterPills: "flex gap-2 overflow-x-auto",
   tagWrap: "flex gap-1.5 mt-2 flex-wrap",
   stack: "flex flex-col gap-2.5 md:gap-3",
-  actionStack: "flex flex-col gap-2",
   iconActionRow: "flex gap-2 items-center flex-wrap p-3",
   relatedStack: "flex flex-col gap-2 text-[11px]",
   infoBlock: "text-xs text-muted leading-loose",
@@ -204,14 +155,15 @@ export const ui = {
   listenCmd: "flex gap-2 items-center",
   articlePActive: "m-0 mb-4 md:mb-6 text-[13px] md:text-sm text-ink leading-relaxed bg-chip rounded-md px-2 py-1 -mx-2",
   readerSplit: "flex flex-1 min-h-0 flex-col md:flex-row",
-  article: "flex-1 overflow-y-auto p-4 md:p-6 md:border-r border-line",
-  articleInner: "max-w-[700px] mx-auto",
+  article: "flex-1 min-h-0 overflow-y-auto p-4 md:p-6 md:border-r border-line",
+  articleInner: "max-w-[700px] mx-auto w-full",
   articleTitle: "m-0 mb-2 md:mb-3 text-[20px] md:text-[28px] font-bold text-ink",
   articleAuthors: "m-0 mb-4 md:mb-6 text-xs md:text-[13px] text-muted",
   articleH: "mt-4 mb-2 md:mt-6 md:mb-3 text-sm md:text-base font-semibold",
+  articleNotice: "m-0 mb-4 md:mb-5 text-[13px] md:text-sm text-muted leading-relaxed",
   articleP: "m-0 mb-4 md:mb-6 text-[13px] md:text-sm text-body leading-relaxed",
   notesAside:
-    "md:w-[300px] md:border-l border-line bg-page flex flex-col border-t md:border-t-0",
+    "md:w-[300px] md:border-l border-line bg-page flex flex-col border-t md:border-t-0 min-h-0",
   notesAsideHead: "px-4 py-4 border-b border-line bg-note-panel",
   notesAsideTitle: "m-0 text-[13px] font-semibold text-ink",
   notesList: "flex-1 overflow-y-auto p-4 flex flex-col gap-3",
@@ -219,7 +171,6 @@ export const ui = {
   noteText: "m-0 text-xs text-ink leading-snug",
   noteTime: "m-0 mt-2 text-[11px] text-hint",
   noteActions: "flex gap-2 mt-2",
-  noteForm: "p-3 border-t border-line flex flex-col gap-2 items-start",
   noteFormRow: "p-3 border-t border-line flex flex-col gap-2 items-start",
 
   summarySplit: "flex flex-1 min-h-0 flex-col md:flex-row",
