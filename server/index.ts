@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { bootstrapApp } from "./bootstrap.ts";
+import { bootstrapApp } from "./bootstrap.js";
 
 function loadDotEnv(file: string) {
   const path = resolve(file);

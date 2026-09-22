@@ -1,4 +1,4 @@
-import type { LibraryEntry, Note, Paper } from "../src/types.ts";
+import type { LibraryEntry, Note, Paper } from "../src/types.js";
 
 export type ApiErrorBody = { error: string; code: string };
 

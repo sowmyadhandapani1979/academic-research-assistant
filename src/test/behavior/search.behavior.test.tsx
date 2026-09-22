@@ -1,6 +1,7 @@
 import { fireEvent } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { describe, expect, it } from "vitest";
+import { searchPapers } from "../../data/fixtures";
 import { msw } from "../msw";
 import { renderApp } from "../renderApp";
 
@@ -24,18 +25,32 @@ describe("UX: Search screen", () => {
     expect(getByText(/climate change/i)).toBeInTheDocument();
   });
 
-  it("When the user opens Advanced Search, Then Discipline chips and Year Range appear", async () => {
+  it("Given the landing page, Then action buttons use a pill shape", () => {
+    const { getAllByRole, getByRole } = renderApp("/");
+    const search = getAllByRole("button", { name: /^search$/i })[0];
+    const dark = getByRole("radio", { name: /^dark$/i });
+    for (const el of [search, dark]) {
+      expect(el.className.split(/\s+/)).toContain("rounded-full");
+    }
+  });
+
+  it("When the user opens Advanced Search, Then Discipline chips and Year Range appear with nothing selected", async () => {
     const { user, getByRole, queryByRole } = renderApp("/");
     expect(queryByRole("button", { name: /computer science/i })).not.toBeInTheDocument();
     await user.click(getByRole("button", { name: /advanced search/i }));
     expect(getByRole("button", { name: /hide filters/i })).toBeInTheDocument();
     const cs = getByRole("button", { name: /computer science/i });
-    expect(cs).toHaveAttribute("aria-pressed", "true");
+    expect(cs).toHaveAttribute("aria-pressed", "false");
     expect(cs).toHaveTextContent("Computer Science");
     expect(cs).not.toHaveTextContent("💻");
+    expect(getByRole("button", { name: /^management$/i })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
     expect(getByRole("button", { name: /^management$/i })).toHaveTextContent("Management");
-    expect(getByRole("slider", { name: /^from$/i })).toHaveValue("2010");
-    expect(getByRole("slider", { name: /^to$/i })).toHaveValue("2019");
+    expect(getByRole("slider", { name: /^from$/i })).toHaveValue("1990");
+    expect(getByRole("slider", { name: /^to$/i })).toHaveValue(String(new Date().getFullYear()));
+    expect(getByRole("slider", { name: /^from$/i }).closest("aside")).toHaveTextContent(/any/i);
   });
 
   it("When the user searches Management papers from 2000 to 2009, Then discipline and year are sent with the query", async () => {
@@ -88,7 +103,21 @@ describe("UX: Search screen", () => {
     expect(queryByRole("heading", { name: /attention is all you need/i })).not.toBeInTheDocument();
   });
 
-  it("When the user searches Deep Learning in 2010–2019 Computer Science, Then papers from that period remain", async () => {
+  it("When the user searches Deep Learning without choosing filters, Then no discipline or year is sent and papers remain", async () => {
+    let requested = "";
+    msw.use(
+      http.get("/api/papers/search", ({ request }) => {
+        requested = request.url;
+        const url = new URL(request.url);
+        const query = url.searchParams.get("query") ?? "";
+        const found = searchPapers(query, {
+          discipline: url.searchParams.get("discipline") ?? undefined,
+          from: url.searchParams.get("from") ?? undefined,
+          to: url.searchParams.get("to") ?? undefined,
+        });
+        return HttpResponse.json({ papers: found, total: found.length });
+      }),
+    );
     const { user, getByPlaceholderText, getAllByRole, findByRole, getByRole } =
       renderApp("/");
     await user.type(
@@ -100,6 +129,11 @@ describe("UX: Search screen", () => {
       await findByRole("heading", { name: /attention is all you need/i }),
     ).toBeInTheDocument();
     expect(getByRole("heading", { name: /bert/i })).toBeInTheDocument();
+    const url = new URL(requested);
+    expect(url.searchParams.get("query")).toBe("Deep Learning");
+    expect(url.searchParams.get("discipline")).toBeNull();
+    expect(url.searchParams.get("from")).toBeNull();
+    expect(url.searchParams.get("to")).toBeNull();
   });
 
   it("Given recent searches, When the user clicks a chip, Then they go to results for that topic", async () => {

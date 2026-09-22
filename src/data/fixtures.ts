@@ -4,7 +4,7 @@ import {
   matchesYear,
   parseDiscipline,
   resolveYearRange,
-} from "../lib/searchFilters";
+} from "../lib/searchFilters.js";
 
 export const EXAMPLE_QUERIES = ["quantum computing", "climate change"];
 

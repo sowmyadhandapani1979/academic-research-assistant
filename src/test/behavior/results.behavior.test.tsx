@@ -22,8 +22,10 @@ describe("UX: Results screen", () => {
       await findByRole("heading", { name: /attention is all you need/i }),
     ).toBeInTheDocument();
     expect((await findAllByPlaceholderText("+ Add tag")).length).toBeGreaterThan(0);
-    expect(getAllByRole("button", { name: /pin for reading/i }).length).toBeGreaterThan(0);
-    expect(getAllByRole("button", { name: /pin for reading/i })[0]).toBeEnabled();
+    expect(getAllByRole("button", { name: /^pin for reading$/i }).length).toBeGreaterThan(0);
+    expect(getAllByRole("button", { name: /^pin for reading$/i })[0]).toBeEnabled();
+    expect(getAllByRole("button", { name: /^pin for reading$/i })[0]).toHaveTextContent("📌");
+    expect(getAllByRole("button", { name: /^pin for reading$/i })[0]).not.toHaveTextContent("📍");
     expect(getAllByRole("link", { name: /^open$/i }).length).toBeGreaterThan(0);
     expect(getByPlaceholderText("Search...")).toBeInTheDocument();
     expect(getByRole("button", { name: /^filters$/i })).toBeInTheDocument();
@@ -58,11 +60,15 @@ describe("UX: Results screen", () => {
       "/results?q=transformers",
     );
     await findByRole("heading", { name: /attention is all you need/i });
-    const pin = getAllByRole("button", { name: /unpin for reading/i })[0];
+    const pin = getAllByRole("button", { name: /^unpin for reading$/i })[0];
     expect(pin).toHaveAttribute("aria-pressed", "true");
+    expect(pin).toHaveTextContent("📍");
+    expect(pin).not.toHaveTextContent("📌");
     await user.click(pin);
-    expect(pin).toHaveAccessibleName(/pin for reading/i);
+    expect(pin).toHaveAccessibleName(/^pin for reading$/i);
     expect(pin).toHaveAttribute("aria-pressed", "false");
+    expect(pin).toHaveTextContent("📌");
+    expect(pin).not.toHaveTextContent("📍");
     expect(pin).not.toHaveTextContent("☐");
   });
 

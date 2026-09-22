@@ -32,7 +32,7 @@ export function MarkButton({
 }) {
   return (
     <IconAction
-      icon="📌"
+      icon={flagged ? "📍" : "📌"}
       label={flagged ? "Unpin for reading" : "Pin for reading"}
       tone={flagged ? "danger" : "neutral"}
       pressed={flagged}

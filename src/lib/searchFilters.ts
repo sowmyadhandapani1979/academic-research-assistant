@@ -24,8 +24,6 @@ export const MOBILE_DISCIPLINE_IDS = new Set([
 
 export const SEARCH_YEAR_MIN = 1990;
 export const SEARCH_YEAR_MAX = new Date().getFullYear();
-export const DEFAULT_YEAR_FROM = 2010;
-export const DEFAULT_YEAR_TO = 2019;
 
 export const SEARCH_PERIODS = [
   { id: "any", label: "Any year" },
@@ -73,6 +71,11 @@ export function parseYear(
 
 export function orderedYears(a: number, b: number): { from: number; to: number } {
   return { from: Math.min(a, b), to: Math.max(a, b) };
+}
+
+export function yearRangeIsAny(years: { from: number; to: number }): boolean {
+  const range = orderedYears(years.from, years.to);
+  return range.from === SEARCH_YEAR_MIN && range.to === SEARCH_YEAR_MAX;
 }
 
 export function resolveYearRange(opts?: {
@@ -150,12 +153,14 @@ export function resultsPath(
   discipline: DisciplineId,
   years: { from: number; to: number },
 ): string {
-  const range = orderedYears(years.from, years.to);
   const q = new URLSearchParams({
     q: query.trim(),
-    from: String(range.from),
-    to: String(range.to),
   });
+  if (!yearRangeIsAny(years)) {
+    const range = orderedYears(years.from, years.to);
+    q.set("from", String(range.from));
+    q.set("to", String(range.to));
+  }
   if (discipline !== "any") q.set("discipline", discipline);
   return `/results?${q}`;
 }

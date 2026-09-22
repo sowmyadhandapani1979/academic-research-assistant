@@ -5,6 +5,7 @@ import {
   SEARCH_YEAR_MAX,
   SEARCH_YEAR_MIN,
   orderedYears,
+  yearRangeIsAny,
   type DisciplineId,
 } from "../lib/searchFilters";
 
@@ -24,6 +25,7 @@ export function SearchFilterPanel({
   onYearTo: (value: number) => void;
 }) {
   const years = orderedYears(yearFrom, yearTo);
+  const anyYear = yearRangeIsAny(years);
   const span = SEARCH_YEAR_MAX - SEARCH_YEAR_MIN || 1;
   const left = ((years.from - SEARCH_YEAR_MIN) / span) * 100;
   const right = 100 - ((years.to - SEARCH_YEAR_MIN) / span) * 100;
@@ -43,7 +45,9 @@ export function SearchFilterPanel({
                 discipline === chip.id ? ui.disciplineChipOn : ui.disciplineChip,
                 MOBILE_DISCIPLINE_IDS.has(chip.id) ? undefined : ui.onlyDesktop,
               )}
-              onClick={() => onDiscipline(chip.id)}
+              onClick={() =>
+                onDiscipline(discipline === chip.id ? "any" : chip.id)
+              }
             >
               <span className={ui.onlyDesktop}>
                 {chip.id === "environmental-science" ? "Environmental" : chip.label}
@@ -81,12 +85,12 @@ export function SearchFilterPanel({
         <div className={ui.yearLabels}>
           <div className="text-center flex-1">
             <p className={`${ui.yearCaption} hidden md:block`}>From</p>
-            <p className={ui.yearValue}>{years.from}</p>
+            <p className={ui.yearValue}>{anyYear ? "Any" : years.from}</p>
           </div>
           <span className={ui.yearDash}>–</span>
           <div className="text-center flex-1">
             <p className={`${ui.yearCaption} hidden md:block`}>To</p>
-            <p className={ui.yearValue}>{years.to}</p>
+            <p className={ui.yearValue}>{anyYear ? "Any" : years.to}</p>
           </div>
         </div>
       </div>

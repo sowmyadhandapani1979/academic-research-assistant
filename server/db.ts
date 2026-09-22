@@ -4,19 +4,19 @@ import {
   DEFAULT_RECENTS,
   paperById,
   papers as seedPapers,
-} from "../src/data/fixtures.ts";
-import type { LibraryEntry, Note, NoteKind, NoteSource, Paper, ReadingStatus } from "../src/types.ts";
-import { cleanPaper } from "../src/lib/plainText.ts";
+} from "../src/data/fixtures.js";
+import type { LibraryEntry, Note, NoteKind, NoteSource, Paper, ReadingStatus } from "../src/types.js";
+import { cleanPaper } from "../src/lib/plainText.js";
 import {
   nextReadingStatus,
   normalizeReadingStatus,
-} from "../src/lib/readingStatus.ts";
+} from "../src/lib/readingStatus.js";
 import {
   matchesDiscipline,
   matchesYear,
   parseDiscipline,
   resolveYearRange,
-} from "../src/lib/searchFilters.ts";
+} from "../src/lib/searchFilters.js";
 
 const SEARCH_TTL_MS = 24 * 60 * 60 * 1000;
 

@@ -1,5 +1,5 @@
 import express from "express";
-import type { AppDb } from "./db.ts";
+import type { AppDb } from "./db.js";
 import {
   addNoteRow,
   addTag,
@@ -17,12 +17,12 @@ import {
   updateNoteRow,
   upsertMarked,
   upsertPaper,
-} from "./db.ts";
-import type { S2Client } from "./s2.ts";
-import { s2IsQuiet, s2NoteRateLimit, s2ResetQuiet } from "./s2.ts";
-import { searchOpenAlex } from "./openalex.ts";
-import { HttpError } from "./types.ts";
-import type { Paper } from "../src/types.ts";
+} from "./db.js";
+import type { S2Client } from "./s2.js";
+import { s2IsQuiet, s2NoteRateLimit, s2ResetQuiet } from "./s2.js";
+import { searchOpenAlex } from "./openalex.js";
+import { HttpError } from "./types.js";
+import type { Paper } from "../src/types.js";
 import {
   composeSearchQuery,
   disciplineField,
@@ -30,7 +30,7 @@ import {
   resolveYearRange,
   searchCacheKey,
   yearParam,
-} from "../src/lib/searchFilters.ts";
+} from "../src/lib/searchFilters.js";
 
 const RATE_LIMIT_WARNING =
   "No matching papers on this device, and live search is cooling down. Try again in a minute.";
