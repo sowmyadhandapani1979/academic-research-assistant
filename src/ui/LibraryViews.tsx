@@ -4,7 +4,7 @@ import { ContentBadge, StatusBadge, TagChip } from "./chips";
 import { IconAction, SelectField, TextField, SourceLink } from "./controls";
 import type { ReadingStatus } from "../lib/readingStatus";
 import { cx, ui } from "../theme/classes";
-import { Screen, StatusText } from "./SearchHero";
+import { Screen } from "./SearchHero";
 
 export function LibraryToolbar({
   title,
